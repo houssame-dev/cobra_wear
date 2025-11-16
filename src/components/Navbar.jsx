@@ -22,12 +22,6 @@ export default function Navbar() {
           
           <div className="flex items-center space-x-8">
             <Link 
-              href="/" 
-              className="hover:text-gray-600 transition-colors font-medium"
-            >
-              Home
-            </Link>
-            <Link 
               href="/products" 
               className="hover:text-gray-600 transition-colors font-medium"
             >
@@ -37,7 +31,7 @@ export default function Navbar() {
               href="/pod" 
               className="hover:text-gray-600 transition-colors font-medium"
             >
-              Custom POD
+              POD
             </Link>
             
             {/* Cart Icon with Badge */}
