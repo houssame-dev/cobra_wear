@@ -5,7 +5,7 @@
  * Order form and confirmation
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import CartSummary from '@/components/CartSummary';
@@ -27,9 +27,21 @@ export default function CheckoutPage() {
   const [error, setError] = useState('');
 
   // Redirect if cart is empty
-  if (cart.length === 0 && !isSubmitting) {
-    router.push('/cart');
-    return null;
+  useEffect(() => {
+    if (cart.length === 0 && !isSubmitting) {
+      router.push('/cart');
+    }
+  }, [cart.length, isSubmitting, router]);
+
+  // Show loading while redirecting
+  if (cart.length === 0) {
+    return (
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">Redirecting to cart...</p>
+        </div>
+      </main>
+    );
   }
 
   const handleChange = (field, value) => {

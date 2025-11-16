@@ -5,12 +5,12 @@
  * All products with category and style filters
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
 import { products, categories, styles, getProductsByCategory, getProductsByStyle } from '@/data/products';
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedStyle, setSelectedStyle] = useState('all');
@@ -130,6 +130,22 @@ export default function ProductsPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="text-center">
+            <p className="text-gray-600">Loading products...</p>
+          </div>
+        </div>
+      </main>
+    }>
+      <ProductsContent />
+    </Suspense>
   );
 }
 
