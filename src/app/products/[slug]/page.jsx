@@ -36,12 +36,12 @@ export async function generateMetadata({ params }) {
   
   if (!product) {
     return {
-      title: 'Product Not Found - Coobraa',
+      title: 'Product Not Found - Cobra Wear',
     };
   }
 
   return {
-    title: `${product.title} - Coobraa`,
+    title: `${product.title} - Cobra Wear`,
     description: product.description,
   };
 }

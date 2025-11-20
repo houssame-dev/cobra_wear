@@ -6,7 +6,7 @@
 import ImprovedPodUploadForm from '@/components/ImprovedPodUploadForm';
 
 export const metadata = {
-  title: 'Custom Print-On-Demand - Coobraa',
+  title: 'Custom Print-On-Demand - Cobra Wear',
   description: 'Create your own custom designs with our Print-On-Demand service.',
 };
 

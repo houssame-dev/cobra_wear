@@ -65,7 +65,7 @@ export async function sendCustomerOrderConfirmation(orderData) {
       order_type: 'Regular Order',
       
       // Email subject
-      subject: `Order Confirmation - Coobraa`,
+      subject: `Order Confirmation - Cobra Wear`,
     };
 
     const response = await emailjs.send(
@@ -138,7 +138,7 @@ export async function sendCustomerPODConfirmation(orderData) {
       order_type: 'Print-On-Demand Order',
       
       // Email subject
-      subject: `POD Order Confirmation - Coobraa`,
+      subject: `POD Order Confirmation - Cobra Wear`,
     };
 
     const response = await emailjs.send(

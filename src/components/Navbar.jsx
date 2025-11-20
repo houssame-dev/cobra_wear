@@ -19,9 +19,9 @@ export default function Navbar() {
           <Link 
             href="/" 
             className="text-2xl font-bold tracking-tight hover:opacity-80 transition-opacity"
-            aria-label="Coobraa home"
+            aria-label="Cobra Wear home"
           >
-            COOBRAA
+            COBRA WEAR
           </Link>
           
           <div className="flex items-center space-x-8" role="menubar">

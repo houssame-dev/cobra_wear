@@ -102,7 +102,7 @@ export default function OrderSuccessPage() {
 }
 
 export const metadata = {
-  title: 'Order Successful - Coobraa',
+  title: 'Order Successful - Cobra Wear',
   description: 'Your order has been placed successfully.',
 };
 

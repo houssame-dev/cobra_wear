@@ -1,4 +1,4 @@
-# Coobraa - Premium Clothing & Print-On-Demand
+# Cobra Wear - Premium Clothing & Print-On-Demand
 
 A modern Next.js 14 e-commerce website featuring both a traditional online store and a custom Print-On-Demand (POD) service.
 
