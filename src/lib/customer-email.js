@@ -10,13 +10,13 @@ import emailjs from '@emailjs/browser';
  */
 export async function sendCustomerOrderConfirmation(orderData) {
   const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-  // Only use CUSTOMER_TEMPLATE_ID - don't fallback to avoid duplicate emails
-  const templateId = process.env.NEXT_PUBLIC_EMAILJS_CUSTOMER_TEMPLATE_ID;
+  // Use dedicated customer regular template
+  const templateId = process.env.NEXT_PUBLIC_EMAILJS_CUSTOMER_REGULAR_TEMPLATE_ID;
   const userId = process.env.NEXT_PUBLIC_EMAILJS_USER_ID;
 
   // If no customer template is configured, skip sending (prevents duplicates)
   if (!templateId) {
-    console.log('Customer email template not configured, skipping customer confirmation');
+    console.log('Customer regular email template not configured, skipping customer confirmation');
     return;
   }
 
@@ -88,13 +88,13 @@ export async function sendCustomerOrderConfirmation(orderData) {
  */
 export async function sendCustomerPODConfirmation(orderData) {
   const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-  // Only use CUSTOMER_TEMPLATE_ID - don't fallback to avoid duplicate emails
-  const templateId = process.env.NEXT_PUBLIC_EMAILJS_CUSTOMER_TEMPLATE_ID;
+  // Use dedicated customer POD template
+  const templateId = process.env.NEXT_PUBLIC_EMAILJS_CUSTOMER_POD_TEMPLATE_ID;
   const userId = process.env.NEXT_PUBLIC_EMAILJS_USER_ID;
 
   // If no customer template is configured, skip sending (prevents duplicates)
   if (!templateId) {
-    console.log('Customer email template not configured, skipping customer confirmation');
+    console.log('Customer POD email template not configured, skipping customer confirmation');
     return;
   }
 
