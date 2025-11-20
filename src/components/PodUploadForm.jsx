@@ -12,14 +12,20 @@
  */
 
 import { useState } from 'react';
+import { useToast } from '@/context/ToastContext';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { sendOrderEmail } from '@/lib/emailjs';
+import { sendCustomerPODConfirmation } from '@/lib/customer-email';
+import { validateForm, commonRules } from '@/lib/validation';
+import { trackPODSubmission } from '@/lib/analytics';
 
 const PRODUCT_TYPES = ['Hoodie', 'T-shirt', 'Cap', 'Tote Bag', 'Shorts'];
 const SIZES = ['S', 'M', 'L', 'XL'];
 const COLORS = ['Black', 'White', 'Grey'];
 
 export default function PodUploadForm() {
+  const toast = useToast();
+
   // Form state
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -41,10 +47,19 @@ export default function PodUploadForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   // Handle form field changes
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear field error when user starts typing
+    if (fieldErrors[field]) {
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
   };
 
   // Handle file selection
@@ -53,15 +68,18 @@ export default function PodUploadForm() {
     if (file) {
       if (!file.type.startsWith('image/')) {
         setUploadError('Please select a valid image file');
+        toast.error('Please select a valid image file');
         return;
       }
       if (file.size > 10 * 1024 * 1024) {
         setUploadError('File size must be less than 10MB');
+        toast.error('File size must be less than 10MB');
         return;
       }
       setUploadedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
       setUploadError('');
+      toast.success('Image selected successfully!');
     }
   };
 
@@ -69,6 +87,7 @@ export default function PodUploadForm() {
   const handleUploadToCloudinary = async () => {
     if (!uploadedFile) {
       setUploadError('Please select a file first');
+      toast.error('Please select a file first');
       return;
     }
 
@@ -78,9 +97,11 @@ export default function PodUploadForm() {
     try {
       const result = await uploadToCloudinary(uploadedFile);
       setFormData((prev) => ({ ...prev, designUrl: result.url }));
+      toast.success('Design uploaded successfully!');
       setStep(5); // Move to shipping details
     } catch (error) {
       setUploadError('Failed to upload image. Please try again.');
+      toast.error('Failed to upload image. Please try again.');
       console.error('Upload error:', error);
     } finally {
       setIsUploading(false);
@@ -90,20 +111,41 @@ export default function PodUploadForm() {
   // Submit order
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFieldErrors({});
     
     if (!formData.designUrl) {
-      alert('Please upload a design first');
+      toast.error('Please upload a design first');
+      return;
+    }
+
+    // Validate form
+    const validation = validateForm(formData, commonRules);
+    if (!validation.isValid) {
+      setFieldErrors(validation.errors);
+      toast.error('Please fix the errors in the form');
       return;
     }
 
     setIsSubmitting(true);
 
     try {
+      // Send order email to business
       await sendOrderEmail(formData);
+      
+      // Send confirmation email to customer (non-blocking)
+      sendCustomerPODConfirmation(formData).catch(err => {
+        console.error('Failed to send customer confirmation:', err);
+        // Don't block the order - just log the error
+      });
+      
+      // Track POD submission in analytics
+      trackPODSubmission(formData.productType);
+      
       setSubmitSuccess(true);
+      toast.success('Order placed successfully! Check your email for confirmation.');
       setStep(6); // Success screen
     } catch (error) {
-      alert('Failed to submit order. Please try again.');
+      toast.error('Failed to submit order. Please try again.');
       console.error('Submit error:', error);
     } finally {
       setIsSubmitting(false);
@@ -343,60 +385,97 @@ export default function PodUploadForm() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block mb-2 font-medium">Full Name *</label>
+                <label htmlFor="pod-name" className="block mb-2 font-medium">Full Name *</label>
                 <input
+                  id="pod-name"
                   type="text"
-                  required
                   value={formData.customerName}
                   onChange={(e) => handleChange('customerName', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black"
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:border-black ${
+                    fieldErrors.customerName ? 'border-red-500' : 'border-gray-300'
+                  }`}
                   placeholder="John Doe"
+                  aria-invalid={!!fieldErrors.customerName}
+                  aria-describedby={fieldErrors.customerName ? 'pod-name-error' : undefined}
                 />
+                {fieldErrors.customerName && (
+                  <p id="pod-name-error" className="mt-1 text-sm text-red-600" role="alert">
+                    {fieldErrors.customerName}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label className="block mb-2 font-medium">Email *</label>
+                <label htmlFor="pod-email" className="block mb-2 font-medium">Email *</label>
                 <input
+                  id="pod-email"
                   type="email"
-                  required
                   value={formData.customerEmail}
                   onChange={(e) => handleChange('customerEmail', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black"
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:border-black ${
+                    fieldErrors.customerEmail ? 'border-red-500' : 'border-gray-300'
+                  }`}
                   placeholder="john@example.com"
+                  aria-invalid={!!fieldErrors.customerEmail}
+                  aria-describedby={fieldErrors.customerEmail ? 'pod-email-error' : undefined}
                 />
+                {fieldErrors.customerEmail && (
+                  <p id="pod-email-error" className="mt-1 text-sm text-red-600" role="alert">
+                    {fieldErrors.customerEmail}
+                  </p>
+                )}
               </div>
 
               <div>
-                <label className="block mb-2 font-medium">Phone *</label>
+                <label htmlFor="pod-phone" className="block mb-2 font-medium">Phone *</label>
                 <input
+                  id="pod-phone"
                   type="tel"
-                  required
                   value={formData.customerPhone}
                   onChange={(e) => handleChange('customerPhone', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black"
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:border-black ${
+                    fieldErrors.customerPhone ? 'border-red-500' : 'border-gray-300'
+                  }`}
                   placeholder="+1 234 567 8900"
+                  aria-invalid={!!fieldErrors.customerPhone}
+                  aria-describedby={fieldErrors.customerPhone ? 'pod-phone-error' : undefined}
                 />
+                {fieldErrors.customerPhone && (
+                  <p id="pod-phone-error" className="mt-1 text-sm text-red-600" role="alert">
+                    {fieldErrors.customerPhone}
+                  </p>
+                )}
               </div>
 
               <div className="md:col-span-2">
-                <label className="block mb-2 font-medium">
+                <label htmlFor="pod-address" className="block mb-2 font-medium">
                   Shipping Address *
                 </label>
                 <textarea
-                  required
+                  id="pod-address"
                   value={formData.customerAddress}
                   onChange={(e) => handleChange('customerAddress', e.target.value)}
                   rows={3}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black"
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:border-black ${
+                    fieldErrors.customerAddress ? 'border-red-500' : 'border-gray-300'
+                  }`}
                   placeholder="123 Main St, City, State, ZIP"
+                  aria-invalid={!!fieldErrors.customerAddress}
+                  aria-describedby={fieldErrors.customerAddress ? 'pod-address-error' : undefined}
                 />
+                {fieldErrors.customerAddress && (
+                  <p id="pod-address-error" className="mt-1 text-sm text-red-600" role="alert">
+                    {fieldErrors.customerAddress}
+                  </p>
+                )}
               </div>
 
               <div className="md:col-span-2">
-                <label className="block mb-2 font-medium">
+                <label htmlFor="pod-notes" className="block mb-2 font-medium">
                   Additional Notes (Optional)
                 </label>
                 <textarea
+                  id="pod-notes"
                   value={formData.notes}
                   onChange={(e) => handleChange('notes', e.target.value)}
                   rows={3}

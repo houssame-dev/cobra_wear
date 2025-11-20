@@ -51,7 +51,7 @@ export function CartProvider({ children }) {
         newCart[existingItemIndex].quantity += quantity;
         return newCart;
       } else {
-        // Add new item
+        // Add new item with stable ID (no timestamp needed since we check for duplicates)
         return [
           ...prevCart,
           {
@@ -59,7 +59,7 @@ export function CartProvider({ children }) {
             selectedSize,
             selectedColor,
             quantity,
-            cartItemId: `${product.id}-${selectedSize}-${selectedColor}-${Date.now()}`,
+            cartItemId: `${product.id}-${selectedSize}-${selectedColor}`,
           },
         ];
       }

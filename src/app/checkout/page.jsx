@@ -8,12 +8,17 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
+import { useToast } from '@/context/ToastContext';
 import CartSummary from '@/components/CartSummary';
 import { sendRegularOrderEmail } from '@/lib/order-email';
+import { sendCustomerOrderConfirmation } from '@/lib/customer-email';
+import { validateForm, commonRules } from '@/lib/validation';
+import { trackPurchase } from '@/lib/analytics';
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, clearCart, getCartTotal, getCartItemsCount } = useCart();
+  const toast = useToast();
   
   const [formData, setFormData] = useState({
     customerName: '',
@@ -24,7 +29,7 @@ export default function CheckoutPage() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -46,29 +51,63 @@ export default function CheckoutPage() {
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    setError('');
+    // Clear field error when user starts typing
+    if (fieldErrors[field]) {
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFieldErrors({});
+
+    // Validate form
+    const validation = validateForm(formData, commonRules);
+    if (!validation.isValid) {
+      setFieldErrors(validation.errors);
+      toast.error('Please fix the errors in the form');
+      return;
+    }
+
     setIsSubmitting(true);
-    setError('');
 
     try {
-      // Send order email
-      await sendRegularOrderEmail({
+      const orderInfo = {
         ...formData,
         items: cart,
+      };
+
+      // Send order email to business
+      await sendRegularOrderEmail(orderInfo);
+
+      // Send confirmation email to customer (non-blocking)
+      sendCustomerOrderConfirmation(orderInfo).catch(err => {
+        console.error('Failed to send customer confirmation:', err);
+        // Don't block the order - just log the error
       });
+
+      // Track purchase in analytics
+      const subtotal = getCartTotal();
+      const shipping = subtotal > 100 ? 0 : 10;
+      trackPurchase({ total: subtotal + shipping });
 
       // Clear cart
       clearCart();
 
+      // Show success message
+      toast.success('Order placed successfully! Check your email for confirmation.');
+
       // Redirect to success page
-      router.push('/checkout/success');
+      setTimeout(() => {
+        router.push('/checkout/success');
+      }, 500);
     } catch (err) {
       console.error('Order submission error:', err);
-      setError('Failed to submit order. Please try again.');
+      toast.error('Failed to submit order. Please try again.');
       setIsSubmitting(false);
     }
   };
@@ -91,79 +130,110 @@ export default function CheckoutPage() {
             <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-xl p-6 md:p-8">
               <h2 className="text-2xl font-bold mb-6">Shipping Information</h2>
 
-              {error && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
-                  {error}
-                </div>
-              )}
-
               <div className="space-y-6">
                 {/* Full Name */}
                 <div>
-                  <label className="block mb-2 font-medium">
+                  <label htmlFor="customer-name" className="block mb-2 font-medium">
                     Full Name <span className="text-red-500">*</span>
                   </label>
                   <input
+                    id="customer-name"
                     type="text"
-                    required
                     value={formData.customerName}
                     onChange={(e) => handleChange('customerName', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black"
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:border-black ${
+                      fieldErrors.customerName ? 'border-red-500' : 'border-gray-300'
+                    }`}
                     placeholder="John Doe"
+                    aria-invalid={!!fieldErrors.customerName}
+                    aria-describedby={fieldErrors.customerName ? 'name-error' : undefined}
                   />
+                  {fieldErrors.customerName && (
+                    <p id="name-error" className="mt-1 text-sm text-red-600" role="alert">
+                      {fieldErrors.customerName}
+                    </p>
+                  )}
                 </div>
 
                 {/* Email */}
                 <div>
-                  <label className="block mb-2 font-medium">
+                  <label htmlFor="customer-email" className="block mb-2 font-medium">
                     Email Address <span className="text-red-500">*</span>
                   </label>
                   <input
+                    id="customer-email"
                     type="email"
-                    required
                     value={formData.customerEmail}
                     onChange={(e) => handleChange('customerEmail', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black"
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:border-black ${
+                      fieldErrors.customerEmail ? 'border-red-500' : 'border-gray-300'
+                    }`}
                     placeholder="john@example.com"
+                    aria-invalid={!!fieldErrors.customerEmail}
+                    aria-describedby={fieldErrors.customerEmail ? 'email-error' : undefined}
                   />
+                  {fieldErrors.customerEmail && (
+                    <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
+                      {fieldErrors.customerEmail}
+                    </p>
+                  )}
                 </div>
 
                 {/* Phone */}
                 <div>
-                  <label className="block mb-2 font-medium">
+                  <label htmlFor="customer-phone" className="block mb-2 font-medium">
                     Phone Number <span className="text-red-500">*</span>
                   </label>
                   <input
+                    id="customer-phone"
                     type="tel"
-                    required
                     value={formData.customerPhone}
                     onChange={(e) => handleChange('customerPhone', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black"
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:border-black ${
+                      fieldErrors.customerPhone ? 'border-red-500' : 'border-gray-300'
+                    }`}
                     placeholder="+1 234 567 8900"
+                    aria-invalid={!!fieldErrors.customerPhone}
+                    aria-describedby={fieldErrors.customerPhone ? 'phone-error' : undefined}
                   />
+                  {fieldErrors.customerPhone && (
+                    <p id="phone-error" className="mt-1 text-sm text-red-600" role="alert">
+                      {fieldErrors.customerPhone}
+                    </p>
+                  )}
                 </div>
 
                 {/* Address */}
                 <div>
-                  <label className="block mb-2 font-medium">
+                  <label htmlFor="customer-address" className="block mb-2 font-medium">
                     Shipping Address <span className="text-red-500">*</span>
                   </label>
                   <textarea
-                    required
+                    id="customer-address"
                     value={formData.customerAddress}
                     onChange={(e) => handleChange('customerAddress', e.target.value)}
                     rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black resize-none"
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:border-black resize-none ${
+                      fieldErrors.customerAddress ? 'border-red-500' : 'border-gray-300'
+                    }`}
                     placeholder="Street address, City, State, ZIP Code"
+                    aria-invalid={!!fieldErrors.customerAddress}
+                    aria-describedby={fieldErrors.customerAddress ? 'address-error' : undefined}
                   />
+                  {fieldErrors.customerAddress && (
+                    <p id="address-error" className="mt-1 text-sm text-red-600" role="alert">
+                      {fieldErrors.customerAddress}
+                    </p>
+                  )}
                 </div>
 
                 {/* Notes */}
                 <div>
-                  <label className="block mb-2 font-medium">
+                  <label htmlFor="order-notes" className="block mb-2 font-medium">
                     Order Notes (Optional)
                   </label>
                   <textarea
+                    id="order-notes"
                     value={formData.notes}
                     onChange={(e) => handleChange('notes', e.target.value)}
                     rows={3}

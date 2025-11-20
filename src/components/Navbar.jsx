@@ -13,23 +13,31 @@ export default function Navbar() {
   const cartCount = getCartItemsCount();
 
   return (
-    <nav className="border-b border-gray-200 bg-white sticky top-0 z-50">
+    <nav className="border-b border-gray-200 bg-white sticky top-0 z-50" role="navigation" aria-label="Main navigation">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="text-2xl font-bold tracking-tight hover:opacity-80 transition-opacity">
+          <Link 
+            href="/" 
+            className="text-2xl font-bold tracking-tight hover:opacity-80 transition-opacity"
+            aria-label="Coobraa home"
+          >
             COOBRAA
           </Link>
           
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-8" role="menubar">
             <Link 
               href="/products" 
               className="hover:text-gray-600 transition-colors font-medium"
+              role="menuitem"
+              aria-label="View all products"
             >
               Products
             </Link>
             <Link 
               href="/pod" 
               className="hover:text-gray-600 transition-colors font-medium"
+              role="menuitem"
+              aria-label="Print on demand custom designs"
             >
               POD
             </Link>
@@ -38,12 +46,15 @@ export default function Navbar() {
             <Link 
               href="/cart" 
               className="relative hover:text-gray-600 transition-colors"
+              role="menuitem"
+              aria-label={cartCount > 0 ? `Shopping cart with ${cartCount} items` : 'Shopping cart (empty)'}
             >
               <svg
                 className="w-6 h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -55,7 +66,10 @@ export default function Navbar() {
               
               {/* Badge */}
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-black text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <span 
+                  className="absolute -top-2 -right-2 bg-black text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                  aria-label={`${cartCount} items in cart`}
+                >
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
               )}

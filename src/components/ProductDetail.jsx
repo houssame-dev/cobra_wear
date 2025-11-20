@@ -9,10 +9,13 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
+import { useToast } from '@/context/ToastContext';
+import { trackAddToCart } from '@/lib/analytics';
 
 export default function ProductDetail({ product }) {
   const router = useRouter();
   const { addToCart } = useCart();
+  const toast = useToast();
 
   const [selectedSize, setSelectedSize] = useState(product.sizes[0] || '');
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.name || '');
@@ -21,12 +24,17 @@ export default function ProductDetail({ product }) {
 
   const handleAddToCart = () => {
     if (!selectedSize || !selectedColor) {
-      alert('Please select size and color');
+      toast.warning('Please select size and color');
       return;
     }
 
     addToCart(product, selectedSize, selectedColor, quantity);
     setAddedToCart(true);
+    
+    // Track analytics
+    trackAddToCart(product);
+    
+    toast.success(`Added ${quantity} ${product.title} to cart!`);
 
     // Reset notification after 3 seconds
     setTimeout(() => {

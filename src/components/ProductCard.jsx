@@ -13,24 +13,28 @@ export default function ProductCard({ product }) {
   const image = images && images[0];
 
   return (
-    <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+    <article 
+      className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300"
+      aria-label={`${title} product card`}
+    >
       {/* Product Image */}
-      <Link href={`/products/${slug}`}>
+      <Link href={`/products/${slug}`} aria-label={`View ${title} details`}>
         <div className="relative aspect-square bg-gray-100 overflow-hidden cursor-pointer">
           {image ? (
             <Image
               src={image}
-              alt={title}
+              alt={`${title} product image`}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
+            <div className="w-full h-full flex items-center justify-center" role="img" aria-label="Product image placeholder">
               <svg
                 className="w-24 h-24 text-gray-300"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -43,7 +47,7 @@ export default function ProductCard({ product }) {
           )}
           
           {!inStock && (
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center" role="status">
               <span className="bg-white px-4 py-2 rounded-lg font-bold text-sm">
                 OUT OF STOCK
               </span>
@@ -59,16 +63,19 @@ export default function ProductCard({ product }) {
             {title}
           </h3>
         </Link>
-        <p className="text-2xl font-bold mb-4">${price.toFixed(2)}</p>
+        <p className="text-2xl font-bold mb-4" aria-label={`Price: ${price.toFixed(2)} dollars`}>
+          ${price.toFixed(2)}
+        </p>
         
         <Link
           href={`/products/${slug}`}
           className="block w-full bg-black text-white text-center py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors"
+          aria-label={`View ${title} details and purchase options`}
         >
           {inStock ? 'View Details' : 'View Product'}
         </Link>
       </div>
-    </div>
+    </article>
   );
 }
 

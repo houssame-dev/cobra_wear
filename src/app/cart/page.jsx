@@ -8,10 +8,11 @@
 import { useCart } from '@/context/CartContext';
 import CartItem from '@/components/CartItem';
 import CartSummary from '@/components/CartSummary';
+import { CartItemSkeleton, CartSummarySkeleton } from '@/components/Skeleton';
 import Link from 'next/link';
 
 export default function CartPage() {
-  const { cart } = useCart();
+  const { cart, isLoaded } = useCart();
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -25,7 +26,19 @@ export default function CartPage() {
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {cart.length > 0 ? (
+        {!isLoaded ? (
+          // Loading state
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-4">
+              <CartItemSkeleton />
+              <CartItemSkeleton />
+              <CartItemSkeleton />
+            </div>
+            <div className="lg:col-span-1">
+              <CartSummarySkeleton />
+            </div>
+          </div>
+        ) : cart.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
             <div className="lg:col-span-2">

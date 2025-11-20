@@ -8,6 +8,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
+import { ProductCardSkeleton } from '@/components/Skeleton';
 import { products, categories, styles, getProductsByCategory, getProductsByStyle } from '@/data/products';
 
 function ProductsContent() {
@@ -137,9 +138,17 @@ export default function ProductsPage() {
   return (
     <Suspense fallback={
       <main className="min-h-screen bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="text-center">
-            <p className="text-gray-600">Loading products...</p>
+        <section className="bg-gray-50 border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="h-12 bg-gray-200 rounded w-1/3 mb-4 animate-pulse"></div>
+            <div className="h-6 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+          </div>
+        </section>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {[...Array(8)].map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
           </div>
         </div>
       </main>

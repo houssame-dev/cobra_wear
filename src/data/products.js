@@ -3,6 +3,8 @@
  * All products available in the store
  */
 
+import { productPlaceholders, getPlaceholderByCategory } from '@/lib/placeholder-images';
+
 export const products = [
   {
     id: 1,
@@ -13,8 +15,8 @@ export const products = [
     price: 49.99,
     description: 'Premium quality hoodie made from 100% organic cotton. Features a comfortable fit and durable construction. Perfect for everyday wear.',
     images: [
-      '/images/products/hoodie-black-1.jpg', // TODO: Add your actual product images
-      '/images/products/hoodie-black-2.jpg',
+      productPlaceholders.hoodie,
+      productPlaceholders.hoodie,
     ],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     colors: [
@@ -41,8 +43,8 @@ export const products = [
     price: 29.99,
     description: 'Clean and minimal t-shirt design. Perfect for everyday wear with a comfortable, breathable fabric.',
     images: [
-      '/images/products/tshirt-white-1.jpg',
-      '/images/products/tshirt-white-2.jpg',
+      productPlaceholders.tshirt,
+      productPlaceholders.tshirt,
     ],
     sizes: ['S', 'M', 'L', 'XL'],
     colors: [
@@ -69,8 +71,8 @@ export const products = [
     price: 39.99,
     description: 'Comfortable athletic shorts perfect for workouts or casual wear. Made with moisture-wicking fabric.',
     images: [
-      '/images/products/shorts-grey-1.jpg',
-      '/images/products/shorts-grey-2.jpg',
+      productPlaceholders.shorts,
+      productPlaceholders.shorts,
     ],
     sizes: ['S', 'M', 'L', 'XL'],
     colors: [
@@ -97,8 +99,8 @@ export const products = [
     price: 24.99,
     description: 'Stylish urban cap with adjustable strap. Features embroidered details and quality construction.',
     images: [
-      '/images/products/cap-black-1.jpg',
-      '/images/products/cap-black-2.jpg',
+      productPlaceholders.cap,
+      productPlaceholders.cap,
     ],
     sizes: ['One Size'],
     colors: [
@@ -125,8 +127,8 @@ export const products = [
     price: 19.99,
     description: 'Eco-friendly tote bag made from sustainable materials. Spacious and durable for everyday use.',
     images: [
-      '/images/products/tote-natural-1.jpg',
-      '/images/products/tote-natural-2.jpg',
+      productPlaceholders.bag,
+      productPlaceholders.bag,
     ],
     sizes: ['One Size'],
     colors: [
@@ -153,8 +155,8 @@ export const products = [
     price: 54.99,
     description: 'Trendy oversized hoodie with premium fabric. Perfect for a relaxed, comfortable style.',
     images: [
-      '/images/products/hoodie-oversized-1.jpg',
-      '/images/products/hoodie-oversized-2.jpg',
+      productPlaceholders.hoodie,
+      productPlaceholders.hoodie,
     ],
     sizes: ['M', 'L', 'XL'],
     colors: [
@@ -181,8 +183,8 @@ export const products = [
     price: 27.99,
     description: 'Essential wardrobe staple. Premium black t-shirt with perfect fit and exceptional comfort.',
     images: [
-      '/images/products/tshirt-black-1.jpg',
-      '/images/products/tshirt-black-2.jpg',
+      productPlaceholders.tshirt,
+      productPlaceholders.tshirt,
     ],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     colors: [
@@ -208,8 +210,8 @@ export const products = [
     price: 22.99,
     description: 'Clean white sport cap perfect for any occasion. Adjustable fit with breathable design.',
     images: [
-      '/images/products/cap-white-1.jpg',
-      '/images/products/cap-white-2.jpg',
+      productPlaceholders.cap,
+      productPlaceholders.cap,
     ],
     sizes: ['One Size'],
     colors: [
