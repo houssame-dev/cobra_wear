@@ -20,6 +20,19 @@ export async function sendOrderEmail(orderData) {
   }
 
   try {
+    // Format multiple design URLs properly
+    let designInfo = '';
+    if (orderData.designUrls && typeof orderData.designUrls === 'object') {
+      // Multiple design URLs (new format)
+      const designs = Object.entries(orderData.designUrls)
+        .map(([area, url], index) => `${index + 1}. ${area.replace(/([A-Z])/g, ' $1').trim()}: ${url}`)
+        .join('\n\n');
+      designInfo = designs;
+    } else if (orderData.designUrl) {
+      // Single design URL (legacy format)
+      designInfo = orderData.designUrl;
+    }
+
     // Format the order data for email
     const templateParams = {
       // Customer Information
@@ -30,11 +43,11 @@ export async function sendOrderEmail(orderData) {
       
       // Order Details
       product_type: orderData.productType,
-      product_size: orderData.size,
+      product_size: orderData.size || orderData.phoneModel || 'N/A',
       product_color: orderData.color,
       
-      // Design Information
-      design_url: orderData.designUrl,
+      // Design Information (formatted as list)
+      design_url: designInfo,
       
       // Additional Information
       order_notes: orderData.notes || 'No additional notes',

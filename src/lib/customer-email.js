@@ -104,6 +104,19 @@ export async function sendCustomerPODConfirmation(orderData) {
   }
 
   try {
+    // Format multiple design URLs properly
+    let designInfo = '';
+    if (orderData.designUrls && typeof orderData.designUrls === 'object') {
+      // Multiple design URLs (new format)
+      const designs = Object.entries(orderData.designUrls)
+        .map(([area, url], index) => `${index + 1}. ${area.replace(/([A-Z])/g, ' $1').trim()}: ${url}`)
+        .join('\n\n');
+      designInfo = designs;
+    } else if (orderData.designUrl) {
+      // Single design URL (legacy format)
+      designInfo = orderData.designUrl;
+    }
+
     const templateParams = {
       // Customer Information
       to_name: orderData.customerName,
@@ -115,9 +128,9 @@ export async function sendCustomerPODConfirmation(orderData) {
       
       // POD Order Details
       product_type: orderData.productType,
-      product_size: orderData.size,
+      product_size: orderData.size || orderData.phoneModel || 'N/A',
       product_color: orderData.color,
-      design_url: orderData.designUrl,
+      design_url: designInfo,
       
       // Additional Information
       order_notes: orderData.notes || 'No additional notes',
