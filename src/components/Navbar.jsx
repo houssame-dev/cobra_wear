@@ -6,6 +6,7 @@
  */
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useState, useEffect } from 'react';
@@ -61,11 +62,24 @@ export default function Navbar() {
           {/* Logo */}
           <Link 
             href="/" 
-            className="text-xl sm:text-2xl font-bold tracking-tight hover:opacity-80 transition-opacity z-50"
+            className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity z-50 group"
             aria-label="Cobra Wear home"
             onClick={closeMenu}
           >
-            COBRA WEAR
+            {/* Logo Image in Circle */}
+            <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black p-2 shadow-md group-hover:shadow-lg transition-shadow overflow-hidden">
+              <Image
+                src="/images/logo-white.png"
+                alt="Cobra Wear Logo"
+                fill
+                className="object-contain rounded-full"
+                priority
+              />
+            </div>
+            {/* Text - Hidden on mobile */}
+            <span className="hidden sm:block text-xl sm:text-2xl font-bold tracking-tight">
+              COBRA WEAR
+            </span>
           </Link>
           
           {/* Desktop Navigation */}
@@ -242,7 +256,18 @@ export default function Navbar() {
         <div className="flex flex-col h-full">
           {/* Menu Header with Brand */}
           <div className="border-b border-gray-100 px-6 py-5 bg-white flex items-center justify-between">
-            <h2 className="text-xl font-bold text-black">COBRA WEAR</h2>
+            <div className="flex items-center gap-3">
+              {/* Logo Image in Circle */}
+              <div className="relative w-10 h-10 rounded-full bg-black p-2 shadow-md overflow-hidden">
+                <Image
+                  src="/images/logo-white.png"
+                  alt="Cobra Wear Logo"
+                  fill
+                  className="object-contain rounded-full"
+                />
+              </div>
+              <h2 className="text-xl font-bold text-black">COBRA WEAR</h2>
+            </div>
             {/* Close Button */}
             <button
               onClick={closeMenu}
