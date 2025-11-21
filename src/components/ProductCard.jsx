@@ -2,35 +2,44 @@
 
 /**
  * ProductCard Component
- * Simple card component for displaying products
+ * Modern, responsive card component for displaying products
  */
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCart } from '@/context/CartContext';
+import { useToast } from '@/context/ToastContext';
 
 export default function ProductCard({ product }) {
   const { title, price, images, slug, inStock } = product;
   const image = images && images[0];
+  const router = useRouter();
+  const { addToCart } = useCart();
+  const toast = useToast(); // Get the entire toast context
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isBuyingNow, setIsBuyingNow] = useState(false);
 
   return (
     <article 
-      className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300"
+      className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full"
       aria-label={`${title} product card`}
     >
       {/* Product Image */}
       <Link href={`/products/${slug}`} aria-label={`View ${title} details`}>
-        <div className="relative aspect-square bg-gray-100 overflow-hidden cursor-pointer">
+        <div className="relative aspect-square bg-gray-50 overflow-hidden cursor-pointer">
           {image ? (
             <Image
               src={image}
               alt={`${title} product image`}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="object-cover group-hover:scale-110 transition-transform duration-500"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center" role="img" aria-label="Product image placeholder">
               <svg
-                className="w-24 h-24 text-gray-300"
+                className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-gray-300"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -46,36 +55,140 @@ export default function ProductCard({ product }) {
             </div>
           )}
           
+          {/* Out of Stock Overlay */}
           {!inStock && (
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center" role="status">
-              <span className="bg-white px-4 py-2 rounded-lg font-bold text-sm">
+            <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center" role="status">
+              <span className="bg-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg font-bold text-xs sm:text-sm">
                 OUT OF STOCK
               </span>
             </div>
           )}
+
+          {/* Hover Overlay */}
+          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
+            <span className="text-white font-bold text-sm sm:text-base opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+              View Details
+            </span>
+          </div>
         </div>
       </Link>
 
       {/* Product Info */}
-      <div className="p-6">
+      <div className="p-3 sm:p-4 lg:p-6 flex flex-col flex-1">
         <Link href={`/products/${slug}`}>
-          <h3 className="text-lg font-semibold mb-2 group-hover:underline cursor-pointer">
+          <h3 className="text-sm sm:text-base lg:text-lg font-semibold mb-2 group-hover:text-gray-600 transition-colors cursor-pointer line-clamp-2">
             {title}
           </h3>
         </Link>
-        <p className="text-2xl font-bold mb-4" aria-label={`Price: ${price.toFixed(2)} dollars`}>
+        <p className="text-lg sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-4" aria-label={`Price: ${price.toFixed(2)} dollars`}>
           ${price.toFixed(2)}
         </p>
         
-        <Link
-          href={`/products/${slug}`}
-          className="block w-full bg-black text-white text-center py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors"
-          aria-label={`View ${title} details and purchase options`}
-        >
-          {inStock ? 'View Details' : 'View Product'}
-        </Link>
+        {/* Spacer to push buttons to bottom */}
+        <div className="flex-1"></div>
+        
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2 mt-auto">
+          {/* Add to Cart Button - Icon Only */}
+          <div className="relative group/tooltip">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                if (!inStock || isAddingToCart) return;
+                
+                setIsAddingToCart(true);
+                // Add with default size and color (first available)
+                const defaultSize = product.sizes?.[0] || 'M';
+                const defaultColor = product.colors?.[0]?.name || 'Black';
+                
+                addToCart(product, defaultSize, defaultColor, 1);
+                toast.success('Added to cart!');
+                
+                setTimeout(() => setIsAddingToCart(false), 800);
+              }}
+              disabled={!inStock || isAddingToCart}
+              className={`p-2.5 sm:p-3 rounded-lg transition-all duration-300 ${
+                inStock && !isAddingToCart
+                  ? 'bg-black text-white hover:bg-gray-800 hover:scale-110'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+              aria-label="Add to cart"
+            >
+              {/* Shopping Cart + Icon */}
+              {isAddingToCart ? (
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m3-3H9" />
+                </svg>
+              )}
+            </button>
+            {/* Tooltip */}
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+              Add to Cart
+              <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+            </div>
+          </div>
+
+          {/* Buy Now Button - Text */}
+          <div className="relative group/tooltip flex-1">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                if (!inStock || isBuyingNow) return;
+                
+                setIsBuyingNow(true);
+                const defaultSize = product.sizes?.[0] || 'M';
+                const defaultColor = product.colors?.[0]?.name || 'Black';
+                
+                addToCart(product, defaultSize, defaultColor, 1);
+                toast.success('Added to cart! Taking you to cart...');
+                
+                setTimeout(() => {
+                  router.push('/cart');
+                }, 500);
+              }}
+              disabled={!inStock || isBuyingNow}
+              className={`w-full py-2.5 sm:py-3 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 ${
+                inStock && !isBuyingNow
+                  ? 'bg-black text-white hover:bg-gray-800 hover:scale-105'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+              aria-label="Buy now"
+            >
+              {isBuyingNow ? 'Adding...' : 'Buy Now'}
+            </button>
+            {/* Tooltip */}
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+              Quick Checkout
+              <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+            </div>
+          </div>
+
+          {/* View Details Button - Icon Only */}
+          <div className="relative group/tooltip">
+            <Link
+              href={`/products/${slug}`}
+              className="block p-2.5 sm:p-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-all duration-300 hover:scale-110"
+              aria-label="View details"
+            >
+              {/* Eye Icon */}
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </Link>
+            {/* Tooltip */}
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+              View Details
+              <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </article>
   );
 }
-

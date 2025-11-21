@@ -6,13 +6,17 @@
  * Persists to localStorage
  */
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  
+  // Track processed operations to prevent React Strict Mode duplicates
+  const processedOpsRef = useRef(new Set());
+  const operationCounterRef = useRef(0);
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -36,7 +40,22 @@ export function CartProvider({ children }) {
 
   // Add item to cart
   const addToCart = (product, selectedSize, selectedColor, quantity = 1) => {
+    const cartItemId = `${product.id}-${selectedSize}-${selectedColor}`;
+    
+    // Generate unique operation ID for this add operation
+    const operationId = `${cartItemId}-${++operationCounterRef.current}`;
+    console.log(`🔐 Starting operation: ${operationId}`);
+    
     setCart((prevCart) => {
+      // Check if this operation was already processed (React Strict Mode calls this twice)
+      if (processedOpsRef.current.has(operationId)) {
+        console.log(`🔒 Operation ${operationId} already processed, skipping duplicate`);
+        return prevCart; // Return unchanged cart
+      }
+      
+      // Mark this operation as processed
+      processedOpsRef.current.add(operationId);
+      
       // Check if item with same product, size, and color already exists
       const existingItemIndex = prevCart.findIndex(
         (item) =>
@@ -49,9 +68,11 @@ export function CartProvider({ children }) {
         // Update quantity of existing item
         const newCart = [...prevCart];
         newCart[existingItemIndex].quantity += quantity;
+        console.log(`✅ Updated quantity: ${newCart[existingItemIndex].quantity}`);
         return newCart;
       } else {
-        // Add new item with stable ID (no timestamp needed since we check for duplicates)
+        // Add new item with stable ID
+        console.log(`✅ Added new item to cart (operation: ${operationId})`);
         return [
           ...prevCart,
           {
@@ -59,11 +80,17 @@ export function CartProvider({ children }) {
             selectedSize,
             selectedColor,
             quantity,
-            cartItemId: `${product.id}-${selectedSize}-${selectedColor}`,
+            cartItemId,
           },
         ];
       }
     });
+    
+    // Clean up processed operation after a short delay
+    setTimeout(() => {
+      processedOpsRef.current.delete(operationId);
+      console.log(`🔓 Operation ${operationId} cleaned up`);
+    }, 1000);
   };
 
   // Remove item from cart
@@ -85,6 +112,44 @@ export function CartProvider({ children }) {
     );
   };
 
+  // Update item size or color
+  const updateCartItem = (cartItemId, newSize, newColor) => {
+    setCart((prevCart) => {
+      // Find the item to update
+      const itemToUpdate = prevCart.find((item) => item.cartItemId === cartItemId);
+      if (!itemToUpdate) return prevCart;
+
+      // Remove the old item
+      const cartWithoutOldItem = prevCart.filter((item) => item.cartItemId !== cartItemId);
+
+      // Check if item with new size/color already exists
+      const existingItemIndex = cartWithoutOldItem.findIndex(
+        (item) =>
+          item.id === itemToUpdate.id &&
+          item.selectedSize === newSize &&
+          item.selectedColor === newColor
+      );
+
+      if (existingItemIndex > -1) {
+        // Merge with existing item (add quantities)
+        const newCart = [...cartWithoutOldItem];
+        newCart[existingItemIndex].quantity += itemToUpdate.quantity;
+        return newCart;
+      } else {
+        // Add updated item
+        return [
+          ...cartWithoutOldItem,
+          {
+            ...itemToUpdate,
+            selectedSize: newSize,
+            selectedColor: newColor,
+            cartItemId: `${itemToUpdate.id}-${newSize}-${newColor}`,
+          },
+        ];
+      }
+    });
+  };
+
   // Clear entire cart
   const clearCart = () => {
     setCart([]);
@@ -104,6 +169,7 @@ export function CartProvider({ children }) {
     addToCart,
     removeFromCart,
     updateQuantity,
+    updateCartItem,
     clearCart,
     getCartTotal,
     getCartItemsCount,

@@ -17,15 +17,18 @@ export default function CartPage() {
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <h1 className="text-4xl md:text-5xl font-bold">
+      <section className="bg-gradient-to-b from-gray-50 to-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold animate-fade-in">
             Shopping Cart
           </h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-2">
+            Review your items before checkout
+          </p>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {!isLoaded ? (
           // Loading state
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -39,11 +42,11 @@ export default function CartPage() {
             </div>
           </div>
         ) : cart.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             {/* Cart Items */}
             <div className="lg:col-span-2">
-              <div className="bg-white border border-gray-200 rounded-xl p-6">
-                <h2 className="text-2xl font-bold mb-6">
+              <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+                <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
                   Cart Items ({cart.length})
                 </h2>
                 
