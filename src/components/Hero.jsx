@@ -118,17 +118,20 @@ export default function Hero() {
               
               <Link 
                 href="/pod" 
-                className="group inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-black bg-white border-3 border-black rounded-xl transition-all duration-300 hover:scale-105 hover:bg-black hover:text-white"
+                className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-black bg-white border-2 border-black rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:text-white"
               >
-                Print-On-Demand
-                <svg 
-                  className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
+                <span className="relative z-10 flex items-center">
+                  Print-On-Demand
+                  <svg 
+                    className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </span>
+                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </Link>
             </div>
           </div>
@@ -204,8 +207,8 @@ export default function Hero() {
                             <span className="text-base sm:text-lg lg:text-xl line-through text-gray-400 font-medium">258 DH</span>
                             <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">129 DH</span>
                           </div>
-                          <div className="bg-red-600 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
-                            <span className="text-xs sm:text-sm font-bold">SAVE 129 DH</span>
+                          <div className="bg-yellow-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg animate-bounce-slow">
+                            <span className="text-xs sm:text-sm font-bold text-black">SAVE 129 DH</span>
                           </div>
                         </div>
                         
@@ -244,7 +247,7 @@ export default function Hero() {
                           className={`w-full text-center py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 shadow-lg ${
                             isAddingToCart 
                               ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
-                              : 'bg-white text-black hover:bg-gray-100 hover:scale-105 cursor-pointer'
+                              : 'bg-green-400 text-black hover:bg-green-500 hover:scale-[1.03] cursor-pointer'
                           }`}
                         >
                           {isAddingToCart ? 'Adding...' : 'Buy Now 🛒'}

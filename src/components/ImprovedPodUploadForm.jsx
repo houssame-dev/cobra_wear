@@ -187,39 +187,62 @@ export default function ImprovedPodUploadForm() {
     setSubmitSuccess(false);
   };
 
+  const stepLabels = ['Product', 'Color', 'Size', 'Design', 'Preview', 'Details'];
+
   return (
     <div className="max-w-6xl mx-auto">
-      {/* Progress Steps */}
-      <div className="mb-12">
-        <div className="flex justify-between items-center">
-          {[1, 2, 3, 4, 5, 6].map((stepNum) => (
-            <div key={stepNum} className="flex items-center">
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 transition-all ${
-                  step >= stepNum
-                    ? 'bg-black text-white border-black'
-                    : 'bg-white text-gray-400 border-gray-300'
-                }`}
-              >
-                {stepNum}
-              </div>
-              {stepNum < 6 && (
-                <div
-                  className={`w-16 h-1 mx-2 transition-all ${
-                    step > stepNum ? 'bg-black' : 'bg-gray-300'
-                  }`}
-                ></div>
-              )}
-            </div>
-          ))}
+      {/* Progress Steps - Compact Mobile Design */}
+      <div className="mb-8 sm:mb-12">
+        {/* Mobile: Current Step Indicator */}
+        <div className="block sm:hidden mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-semibold text-gray-900">
+              Step {step} of 6
+            </span>
+            <span className="text-xs text-gray-500 font-medium">
+              {stepLabels[step - 1]}
+            </span>
+          </div>
+          {/* Progress Bar */}
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-black h-2 rounded-full transition-all duration-300"
+              style={{ width: `${(step / 6) * 100}%` }}
+            ></div>
+          </div>
         </div>
-        <div className="flex justify-between mt-3 text-xs text-gray-600 font-medium">
-          <span>Product</span>
-          <span>Color</span>
-          <span>Size</span>
-          <span>Design</span>
-          <span>Preview</span>
-          <span>Details</span>
+
+        {/* Desktop: Full Stepper */}
+        <div className="hidden sm:block">
+          <div className="flex justify-between items-center">
+            {[1, 2, 3, 4, 5, 6].map((stepNum) => (
+              <div key={stepNum} className="flex items-center">
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 transition-all ${
+                    step >= stepNum
+                      ? 'bg-black text-white border-black'
+                      : 'bg-white text-gray-400 border-gray-300'
+                  }`}
+                >
+                  {stepNum}
+                </div>
+                {stepNum < 6 && (
+                  <div
+                    className={`w-8 lg:w-16 h-1 mx-1 lg:mx-2 transition-all ${
+                      step > stepNum ? 'bg-black' : 'bg-gray-300'
+                    }`}
+                  ></div>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-between mt-3 text-xs text-gray-600 font-medium">
+            {stepLabels.map((label, index) => (
+              <span key={index} className="text-center" style={{ width: '40px' }}>
+                {label}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -347,7 +370,7 @@ export default function ImprovedPodUploadForm() {
                         handleChange('size', size);
                         setStep(4);
                       }}
-                      className={`p-6 border-2 rounded-xl font-semibold text-xl transition-all ${
+                      className={`p-6 border-2 rounded-xl font-semibold text-xl transition-all flex items-center justify-center ${
                         formData.size === size
                           ? 'border-black bg-black text-white'
                           : 'border-gray-200 hover:border-black'
