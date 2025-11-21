@@ -186,7 +186,7 @@ export default function ProductCard({ product }) {
                 }, 500);
               }}
               disabled={!inStock || isBuyingNow}
-              className={`w-full py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
+              className={`w-full py-2.5 sm:py-3 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
                 inStock && !isBuyingNow
                   ? 'bg-black text-white hover:bg-gray-800 hover:scale-[1.02]'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
