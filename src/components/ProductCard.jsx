@@ -11,7 +11,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
-import { useToast } from '@/context/ToastContext';
 
 export default function ProductCard({ product }) {
   const { title, price, images, slug, inStock } = product;
@@ -19,7 +18,6 @@ export default function ProductCard({ product }) {
   const router = useRouter();
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
-  const toast = useToast();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isBuyingNow, setIsBuyingNow] = useState(false);
   
@@ -84,7 +82,6 @@ export default function ProductCard({ product }) {
             e.preventDefault();
             e.stopPropagation();
             toggleWishlist(product);
-            toast.success(inWishlist ? 'Removed from wishlist' : 'Added to wishlist!');
           }}
           className={`absolute top-3 right-3 z-10 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110 ${
             inWishlist
@@ -136,7 +133,6 @@ export default function ProductCard({ product }) {
                 const defaultColor = product.colors?.[0]?.name || 'Black';
                 
                 addToCart(product, defaultSize, defaultColor, 1);
-                toast.success('Added to cart!');
                 
                 setTimeout(() => setIsAddingToCart(false), 800);
               }}
@@ -167,7 +163,7 @@ export default function ProductCard({ product }) {
             </div>
           </div>
 
-          {/* Buy Button - Text */}
+          {/* Buy Now Button - Text */}
           <div className="relative group/tooltip flex-1">
             <button
               onClick={(e) => {
@@ -179,45 +175,24 @@ export default function ProductCard({ product }) {
                 const defaultColor = product.colors?.[0]?.name || 'Black';
                 
                 addToCart(product, defaultSize, defaultColor, 1);
-                toast.success('Added to cart! Taking you to cart...');
                 
                 setTimeout(() => {
                   router.push('/cart');
                 }, 500);
               }}
               disabled={!inStock || isBuyingNow}
-              className={`w-full py-2.5 sm:py-3 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
+              className={`w-full py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
                 inStock && !isBuyingNow
                   ? 'bg-black text-white hover:bg-gray-800 hover:scale-[1.02]'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
               aria-label="Buy now"
             >
-              {isBuyingNow ? 'Adding...' : 'Buy'}
+              {isBuyingNow ? 'Adding...' : 'Buy Now'}
             </button>
             {/* Tooltip */}
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
               Quick Checkout
-              <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
-            </div>
-          </div>
-
-          {/* View Details Button - Icon Only */}
-          <div className="relative group/tooltip">
-            <Link
-              href={`/products/${slug}`}
-              className="block p-2.5 sm:p-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-all duration-300 hover:scale-110"
-              aria-label="View details"
-            >
-              {/* Eye Icon */}
-              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
-            </Link>
-            {/* Tooltip */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-              View Details
               <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
             </div>
           </div>

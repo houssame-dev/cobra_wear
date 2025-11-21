@@ -1,9 +1,7 @@
 import './globals.css'
 import { CartProvider } from '@/context/CartContext'
-import { ToastProvider } from '@/context/ToastContext'
 import { WishlistProvider } from '@/context/WishlistContext'
 import Navbar from '@/components/Navbar'
-import Toast from '@/components/Toast'
 import Footer from '@/components/Footer'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 
@@ -23,16 +21,13 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="bg-white text-black">
         <GoogleAnalytics />
-        <ToastProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <Navbar />
-              <Toast />
-              {children}
-              <Footer />
-            </WishlistProvider>
-          </CartProvider>
-        </ToastProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </WishlistProvider>
+        </CartProvider>
       </body>
     </html>
   )

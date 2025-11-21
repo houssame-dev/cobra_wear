@@ -10,7 +10,6 @@ import Image from 'next/image';
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
-import { useToast } from '@/context/ToastContext';
 
 // Featured Product - Define OUTSIDE component to prevent recreation
 const FEATURED_PRODUCT = {
@@ -31,7 +30,6 @@ const FEATURED_PRODUCT = {
 export default function Hero() {
   const router = useRouter();
   const { addToCart } = useCart();
-  const toast = useToast();
   
   const [isVisible, setIsVisible] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
@@ -231,9 +229,7 @@ export default function Hero() {
                             // Add product to cart (CartContext handles deduplication)
                             addToCart(FEATURED_PRODUCT, 'M', 'Black', 1);
                             
-                            // Show success message and navigate
-                            toast.success('Added to cart! Taking you to cart...');
-                            
+                            // Navigate to cart
                             setTimeout(() => {
                               router.push('/cart');
                               // Reset after navigation

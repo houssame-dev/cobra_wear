@@ -13,7 +13,6 @@
  */
 
 import { useState } from 'react';
-import { useToast } from '@/context/ToastContext';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { sendOrderEmail } from '@/lib/emailjs';
 import { sendCustomerPODConfirmation } from '@/lib/customer-email';
@@ -24,7 +23,6 @@ import { ProductIconLarge, ProductIconSmall } from '@/components/ProductIcons';
 import MultiFileUpload from '@/components/MultiFileUpload';
 
 export default function ImprovedPodUploadForm() {
-  const toast = useToast();
 
   // Form state
   const [step, setStep] = useState(1);
@@ -93,7 +91,7 @@ export default function ImprovedPodUploadForm() {
     // Check if required files are uploaded
     const missingRequired = requiredAreas.filter((area) => !uploadedFiles[area.id]);
     if (missingRequired.length > 0) {
-      toast.error(`Please upload required designs: ${missingRequired.map((a) => a.name).join(', ')}`);
+      setUploadError(`Please upload required designs: ${missingRequired.map((a) => a.name).join(', ')}`);
       return;
     }
 
@@ -110,11 +108,9 @@ export default function ImprovedPodUploadForm() {
       const designUrls = Object.fromEntries(uploadResults);
 
       setFormData((prev) => ({ ...prev, designUrls }));
-      toast.success('All designs uploaded successfully!');
       setStep(step + 1);
     } catch (error) {
       setUploadError('Failed to upload designs. Please try again.');
-      toast.error('Failed to upload designs. Please try again.');
       console.error('Upload error:', error);
     } finally {
       setIsUploading(false);
@@ -130,7 +126,6 @@ export default function ImprovedPodUploadForm() {
     const validation = validateForm(formData, commonRules);
     if (!validation.isValid) {
       setFieldErrors(validation.errors);
-      toast.error('Please fix the errors in the form');
       return;
     }
 
@@ -156,10 +151,8 @@ export default function ImprovedPodUploadForm() {
       trackPODSubmission(formData.productType);
 
       setSubmitSuccess(true);
-      toast.success('Order placed successfully! Check your email for confirmation.');
       setStep(7); // Success screen
     } catch (error) {
-      toast.error('Failed to submit order. Please try again.');
       console.error('Submit error:', error);
     } finally {
       setIsSubmitting(false);

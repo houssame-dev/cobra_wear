@@ -8,7 +8,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
-import { useToast } from '@/context/ToastContext';
 import CartSummary from '@/components/CartSummary';
 import { sendRegularOrderEmail } from '@/lib/order-email';
 import { sendCustomerOrderConfirmation } from '@/lib/customer-email';
@@ -18,7 +17,6 @@ import { trackPurchase } from '@/lib/analytics';
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, clearCart, getCartTotal, getCartItemsCount } = useCart();
-  const toast = useToast();
   
   const [formData, setFormData] = useState({
     customerName: '',
@@ -69,7 +67,6 @@ export default function CheckoutPage() {
     const validation = validateForm(formData, commonRules);
     if (!validation.isValid) {
       setFieldErrors(validation.errors);
-      toast.error('Please fix the errors in the form');
       return;
     }
 
@@ -98,16 +95,12 @@ export default function CheckoutPage() {
       // Clear cart
       clearCart();
 
-      // Show success message
-      toast.success('Order placed successfully! Check your email for confirmation.');
-
       // Redirect to success page
       setTimeout(() => {
         router.push('/checkout/success');
       }, 500);
     } catch (err) {
       console.error('Order submission error:', err);
-      toast.error('Failed to submit order. Please try again.');
       setIsSubmitting(false);
     }
   };

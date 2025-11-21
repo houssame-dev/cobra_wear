@@ -7,7 +7,6 @@
 
 import { useWishlist } from '@/context/WishlistContext';
 import { useCart } from '@/context/CartContext';
-import { useToast } from '@/context/ToastContext';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,7 +14,6 @@ import Link from 'next/link';
 export default function WishlistPage() {
   const { wishlist, removeFromWishlist, clearWishlist } = useWishlist();
   const { addToCart } = useCart();
-  const toast = useToast();
   const router = useRouter();
 
   const handleAddToCart = (product) => {
@@ -23,7 +21,6 @@ export default function WishlistPage() {
     const defaultColor = product.colors?.[0]?.name || 'Black';
     
     addToCart(product, defaultSize, defaultColor, 1);
-    toast.success('Added to cart!');
   };
 
   const handleBuyNow = (product) => {
@@ -31,7 +28,6 @@ export default function WishlistPage() {
     const defaultColor = product.colors?.[0]?.name || 'Black';
     
     addToCart(product, defaultSize, defaultColor, 1);
-    toast.success('Added to cart! Taking you to cart...');
     
     setTimeout(() => {
       router.push('/cart');
@@ -78,10 +74,7 @@ export default function WishlistPage() {
           </div>
           <button
             onClick={() => {
-              if (confirm('Are you sure you want to clear your entire wishlist?')) {
-                clearWishlist();
-                toast.success('Wishlist cleared!');
-              }
+              clearWishlist();
             }}
             className="px-6 py-2.5 border border-red-500 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all duration-300 font-medium"
           >
@@ -121,7 +114,6 @@ export default function WishlistPage() {
                 <button
                   onClick={() => {
                     removeFromWishlist(product.id);
-                    toast.success('Removed from wishlist');
                   }}
                   className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center rounded-full bg-white text-black border border-black hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-300 hover:scale-110 z-10"
                   aria-label="Remove from wishlist"
