@@ -314,19 +314,42 @@ export default function Hero() {
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6 mb-16">
             {[
-              { name: 'T-Shirts', emoji: '👕', category: 'tshirts' },
-              { name: 'Hoodies', emoji: '🧥', category: 'hoodies' },
-              { name: 'Shorts', emoji: '🩳', category: 'shorts' },
-              { name: 'Caps', emoji: '🧢', category: 'caps' },
-              { name: 'Tote Bags', emoji: '👜', category: 'bags' }
+              { name: 'T-Shirts', image: '/images/categories/t-shirts.png', category: 'tshirts' },
+              { name: 'Hoodies', image: '/images/categories/hoodies.png', category: 'hoodies' },
+              { name: 'Shorts', image: '/images/categories/shorts.png', category: 'shorts' },
+              { name: 'Caps', image: '/images/categories/caps.png', category: 'caps' },
+              { name: 'Tote Bags', image: '/images/categories/tote-bags.png', category: 'bags' }
             ].map((category) => (
               <Link
                 key={category.name}
                 href={`/products?category=${category.category}`}
-                className="group bg-white p-6 sm:p-8 rounded-2xl text-center hover:shadow-xl transition-all duration-300 border border-gray-200 hover:scale-105 hover:-translate-y-1"
+                className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-1"
               >
-                <div className="text-4xl sm:text-5xl mb-3 transition-transform group-hover:scale-110">{category.emoji}</div>
-                <h3 className="font-semibold text-sm sm:text-base group-hover:text-gray-600 transition-colors">{category.name}</h3>
+                {category.image ? (
+                  <>
+                    {/* Background Image */}
+                    <Image
+                      src={category.image}
+                      alt={category.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    {/* Dark Overlay */}
+                    <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition-all duration-300"></div>
+                    {/* Title */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <h3 className="text-white text-2xl sm:text-3xl md:text-4xl font-bold text-center px-4 drop-shadow-lg">
+                        {category.name}
+                      </h3>
+                    </div>
+                  </>
+                ) : (
+                  /* Fallback for items without images */
+                  <div className="bg-white h-full p-6 sm:p-8 rounded-2xl text-center hover:shadow-xl transition-all duration-300 border border-gray-200 flex flex-col items-center justify-center">
+                    <div className="text-4xl sm:text-5xl mb-3 transition-transform group-hover:scale-110">{category.emoji}</div>
+                    <h3 className="font-semibold text-sm sm:text-base group-hover:text-gray-600 transition-colors">{category.name}</h3>
+                  </div>
+                )}
               </Link>
             ))}
           </div>
@@ -334,21 +357,46 @@ export default function Hero() {
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12 mt-16 sm:mt-20">
             Shop by Style
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
             {[
-              { name: 'Anime', emoji: '🎌', desc: 'Japanese inspired', style: 'anime' },
-              { name: 'Gang', emoji: '🔥', desc: 'Street style', style: 'gang' },
-              { name: 'Gaming', emoji: '🎮', desc: 'Gamer vibes', style: 'gaming' },
-              { name: 'Classic', emoji: '⭐', desc: 'Timeless pieces', style: 'classic' }
+              { name: 'Anime', image: '/images/styles/anime.png', desc: 'Japanese inspired', style: 'anime' },
+              { name: 'Gang', image: '/images/styles/gang.png', desc: 'Street style', style: 'gang' },
+              { name: 'Gaming', image: '/images/styles/gaming.png', desc: 'Gamer vibes', style: 'gaming' },
+              { name: 'Streetwear', image: '/images/styles/streetwear.png', desc: 'Urban fashion', style: 'streetwear' },
+              { name: 'Music / Rap', image: '/images/styles/music-rap.png', desc: 'Hip hop culture', style: 'music-rap' },
+              { name: 'Movies / Series', image: '/images/styles/movies-series.png', desc: 'Pop culture icons', style: 'movies-series' }
             ].map((style) => (
               <Link
                 key={style.name}
                 href={`/products?style=${style.style}`}
-                className="group bg-white p-6 sm:p-8 rounded-2xl text-center hover:shadow-xl transition-all duration-300 border border-gray-200 hover:scale-105 hover:-translate-y-1"
+                className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-1"
               >
-                <div className="text-4xl sm:text-5xl mb-3 transition-transform group-hover:scale-110">{style.emoji}</div>
-                <h3 className="font-semibold text-sm sm:text-base mb-2 group-hover:text-gray-600 transition-colors">{style.name}</h3>
-                <p className="text-xs sm:text-sm text-gray-500">{style.desc}</p>
+                {style.image ? (
+                  <>
+                    {/* Background Image */}
+                    <Image
+                      src={style.image}
+                      alt={style.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    {/* Dark Overlay */}
+                    <div className="absolute inset-0 bg-black bg-opacity-40 group-hover:bg-opacity-30 transition-all duration-300"></div>
+                    {/* Title */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <h3 className="text-white text-2xl sm:text-3xl md:text-4xl font-bold text-center px-4 drop-shadow-lg">
+                        {style.name}
+                      </h3>
+                    </div>
+                  </>
+                ) : (
+                  /* Fallback for items without images */
+                  <div className="bg-white h-full p-6 sm:p-8 rounded-2xl text-center hover:shadow-xl transition-all duration-300 border border-gray-200 flex flex-col items-center justify-center">
+                    <div className="text-4xl sm:text-5xl mb-3 transition-transform group-hover:scale-110">{style.emoji}</div>
+                    <h3 className="font-semibold text-sm sm:text-base mb-2 group-hover:text-gray-600 transition-colors">{style.name}</h3>
+                    <p className="text-xs sm:text-sm text-gray-500">{style.desc}</p>
+                  </div>
+                )}
               </Link>
             ))}
           </div>

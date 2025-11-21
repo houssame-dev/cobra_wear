@@ -11,7 +11,7 @@ export const products = [
     slug: 'classic-black-hoodie',
     title: 'Classic Black Hoodie',
     category: 'hoodies',
-    style: 'classic', // New: style field
+    style: 'streetwear', // New: style field
     price: 49.99,
     description: 'Premium quality hoodie made from 100% organic cotton. Features a comfortable fit and durable construction. Perfect for everyday wear.',
     images: [
@@ -39,7 +39,7 @@ export const products = [
     slug: 'minimal-white-tshirt',
     title: 'Minimal White T-Shirt',
     category: 'tshirts',
-    style: 'classic',
+    style: 'streetwear',
     price: 29.99,
     description: 'Clean and minimal t-shirt design. Perfect for everyday wear with a comfortable, breathable fabric.',
     images: [
@@ -67,7 +67,7 @@ export const products = [
     slug: 'premium-grey-shorts',
     title: 'Premium Grey Shorts',
     category: 'shorts',
-    style: 'classic',
+    style: 'streetwear',
     price: 39.99,
     description: 'Comfortable athletic shorts perfect for workouts or casual wear. Made with moisture-wicking fabric.',
     images: [
@@ -123,7 +123,7 @@ export const products = [
     slug: 'eco-tote-bag',
     title: 'Eco Tote Bag',
     category: 'bags',
-    style: 'classic',
+    style: 'streetwear',
     price: 19.99,
     description: 'Eco-friendly tote bag made from sustainable materials. Spacious and durable for everyday use.',
     images: [
@@ -179,7 +179,7 @@ export const products = [
     slug: 'essential-black-tshirt',
     title: 'Essential Black T-Shirt',
     category: 'tshirts',
-    style: 'classic',
+    style: 'streetwear',
     price: 27.99,
     description: 'Essential wardrobe staple. Premium black t-shirt with perfect fit and exceptional comfort.',
     images: [
@@ -206,7 +206,7 @@ export const products = [
     slug: 'sport-cap-white',
     title: 'Sport Cap White',
     category: 'caps',
-    style: 'classic',
+    style: 'streetwear',
     price: 22.99,
     description: 'Clean white sport cap perfect for any occasion. Adjustable fit with breathable design.',
     images: [
@@ -261,7 +261,9 @@ export const styles = [
   { id: 'anime', name: 'Anime', slug: 'anime' },
   { id: 'gang', name: 'Gang', slug: 'gang' },
   { id: 'gaming', name: 'Gaming', slug: 'gaming' },
-  { id: 'classic', name: 'Classic', slug: 'classic' },
+  { id: 'streetwear', name: 'Streetwear', slug: 'streetwear' },
+  { id: 'music-rap', name: 'Music / Rap', slug: 'music-rap' },
+  { id: 'movies-series', name: 'Movies / Series', slug: 'movies-series' },
 ];
 
 export function getProductsByStyle(style) {
