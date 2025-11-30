@@ -63,23 +63,19 @@ export default function Navbar() {
           <Link 
             href="/" 
             className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity z-50 group"
-            aria-label="Cobra Wear home"
+            aria-label="Cobraa Wear home"
             onClick={closeMenu}
           >
-            {/* Logo Image in Circle */}
-            <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black p-2 shadow-md group-hover:shadow-lg transition-shadow overflow-hidden">
+            {/* Logo Image */}
+            <div className="relative w-10 h-10 sm:w-12 sm:h-12">
               <Image
-                src="/images/logo-white.png"
-                alt="Cobra Wear Logo"
+                src="/images/cobraa_wear_logo_1.png"
+                alt="Cobraa Wear Logo"
                 fill
-                className="object-contain rounded-full"
+                className="object-contain"
                 priority
               />
             </div>
-            {/* Text - Hidden on mobile */}
-            <span className="hidden sm:block text-xl sm:text-2xl font-bold tracking-tight">
-              COBRA WEAR
-            </span>
           </Link>
           
           {/* Desktop Navigation */}
@@ -257,16 +253,15 @@ export default function Navbar() {
           {/* Menu Header with Brand */}
           <div className="border-b border-gray-100 px-6 py-5 bg-white flex items-center justify-between">
             <div className="flex items-center gap-3">
-              {/* Logo Image in Circle */}
-              <div className="relative w-10 h-10 rounded-full bg-black p-2 shadow-md overflow-hidden">
+              {/* Logo Image */}
+              <div className="relative w-10 h-10">
                 <Image
-                  src="/images/logo-white.png"
-                  alt="Cobra Wear Logo"
+                  src="/images/cobraa_wear_logo_1.png"
+                  alt="Cobraa Wear Logo"
                   fill
-                  className="object-contain rounded-full"
+                  className="object-contain"
                 />
               </div>
-              <h2 className="text-xl font-bold text-black">COBRA WEAR</h2>
             </div>
             {/* Close Button */}
             <button
@@ -305,7 +300,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3">
               {/* Instagram */}
               <a 
-                href="https://instagram.com" 
+                href="https://www.instagram.com/cobraawear_/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:border-black hover:bg-black hover:text-white transition-all duration-300"
@@ -318,7 +313,7 @@ export default function Navbar() {
 
               {/* TikTok */}
               <a 
-                href="https://tiktok.com" 
+                href="https://www.tiktok.com/@cobraawear_" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:border-black hover:bg-black hover:text-white transition-all duration-300"
@@ -331,7 +326,7 @@ export default function Navbar() {
 
               {/* Facebook */}
               <a 
-                href="https://facebook.com" 
+                href="https://www.facebook.com/mouhcinprint" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:border-black hover:bg-black hover:text-white transition-all duration-300"
@@ -358,7 +353,7 @@ export default function Navbar() {
             
             {/* Copyright */}
             <p className="text-xs text-gray-500 text-center mt-6">
-              © 2025 Cobra Wear
+              © 2025 Cobraa Wear
             </p>
           </div>
         </div>

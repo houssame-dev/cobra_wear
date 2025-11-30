@@ -12,7 +12,7 @@ export default function CartSummary({ showCheckoutButton = true }) {
   const { cart, getCartTotal, getCartItemsCount } = useCart();
 
   const subtotal = getCartTotal();
-  const shipping = subtotal > 100 ? 0 : 10; // Free shipping over $100
+  const shipping = 30; // Flat 30 DH shipping for all Morocco
   const total = subtotal + shipping;
   const itemsCount = getCartItemsCount();
 
@@ -23,30 +23,18 @@ export default function CartSummary({ showCheckoutButton = true }) {
       <div className="space-y-4 mb-6">
         <div className="flex justify-between text-gray-600">
           <span>Items ({itemsCount}):</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span>{subtotal} DH</span>
         </div>
         
         <div className="flex justify-between text-gray-600">
           <span>Shipping:</span>
-          <span>
-            {shipping === 0 ? (
-              <span className="text-green-600 font-medium">FREE</span>
-            ) : (
-              `$${shipping.toFixed(2)}`
-            )}
-          </span>
+          <span>{shipping} DH</span>
         </div>
-
-        {subtotal > 0 && subtotal < 100 && (
-          <p className="text-sm text-gray-500 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-            💡 Add ${(100 - subtotal).toFixed(2)} more for free shipping!
-          </p>
-        )}
 
         <div className="border-t border-gray-300 pt-4">
           <div className="flex justify-between text-xl font-bold">
             <span>Total:</span>
-            <span>${total.toFixed(2)}</span>
+            <span>{total} DH</span>
           </div>
         </div>
       </div>

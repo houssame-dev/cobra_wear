@@ -7,12 +7,69 @@ import Hero from '@/components/Hero';
 import ProductCard from '@/components/ProductCard';
 import { getFeaturedProducts } from '@/data/products';
 import Link from 'next/link';
+export const metadata = {
+  title: 'Home',
+  description: 'Discover premium clothing at Cobraa Wear. Shop hoodies, t-shirts, sweatshirts, jackets, and pants. Create custom designs with our Print-On-Demand service. Fast delivery across Morocco.',
+  openGraph: {
+    title: 'Cobraa Wear - Premium Clothing & Custom Print-On-Demand',
+    description: 'Shop premium clothing and create custom designs with our Print-On-Demand service.',
+    url: '/',
+    images: ['/images/cobraa_wear_logo_1.png'],
+  },
+  alternates: {
+    canonical: '/',
+  },
+};
 
 export default function HomePage() {
   const featuredProducts = getFeaturedProducts().slice(0, 3); // Limit to 3 products
 
+  // Structured Data for SEO
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Cobraa Wear',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://cobraawear.com',
+    logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cobraawear.com'}/images/cobraa_wear_logo_1.png`,
+    description: 'Premium clothing and custom print-on-demand services',
+    sameAs: [
+      'https://www.facebook.com/mouhcinprint',
+      'https://www.instagram.com/cobraawear_/',
+      'https://www.tiktok.com/@cobraawear_',
+    ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'Customer Service',
+      email: 'houssame.dev@gmail.com',
+    },
+  };
+
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Cobraa Wear',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://cobraawear.com',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://cobraawear.com'}/products?search={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
   return (
     <main className="min-h-screen">
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
       {/* Hero Section */}
       <Hero />
 
@@ -87,7 +144,7 @@ export default function HomePage() {
       <section className="bg-gray-50 py-16 sm:py-20 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">Why Choose Cobra Wear?</h2>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">Why Choose Cobraa Wear?</h2>
             <p className="text-gray-600 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto">
               Premium quality, fast delivery, and exceptional service
             </p>

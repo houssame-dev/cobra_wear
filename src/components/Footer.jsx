@@ -18,7 +18,7 @@ export default function Footer() {
           
           {/* Brand Column */}
           <div>
-            <h3 className="text-2xl font-bold mb-4 text-white">COBRA WEAR</h3>
+            <h3 className="text-2xl font-bold mb-4 text-white">COBRAA WEAR</h3>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
               Premium clothing and custom print-on-demand services.
             </p>
@@ -39,13 +39,18 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=shorts" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
-                  Shorts
+                <Link href="/products?category=sweatshirts" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                  Sweatshirts
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=accessories" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
-                  Accessories
+                <Link href="/products?category=jackets" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                  Jackets
+                </Link>
+              </li>
+              <li>
+                <Link href="/products?category=pants" className="text-gray-400 hover:text-white transition-colors duration-200 text-sm">
+                  Pants
                 </Link>
               </li>
               <li>
@@ -122,7 +127,7 @@ export default function Footer() {
             
             {/* Instagram */}
             <a 
-              href="https://instagram.com" 
+              href="https://www.instagram.com/cobraawear_/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-700 text-white hover:border-white hover:bg-white hover:text-black transition-all duration-300 group"
@@ -135,7 +140,7 @@ export default function Footer() {
 
             {/* TikTok */}
             <a 
-              href="https://tiktok.com" 
+              href="https://www.tiktok.com/@cobraawear_" 
               target="_blank" 
               rel="noopener noreferrer"
               className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-700 text-white hover:border-white hover:bg-white hover:text-black transition-all duration-300 group"
@@ -148,7 +153,7 @@ export default function Footer() {
 
             {/* Facebook */}
             <a 
-              href="https://facebook.com" 
+              href="https://www.facebook.com/mouhcinprint" 
               target="_blank" 
               rel="noopener noreferrer"
               className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-700 text-white hover:border-white hover:bg-white hover:text-black transition-all duration-300 group"
@@ -188,7 +193,7 @@ export default function Footer() {
 
           {/* Copyright */}
           <p className="text-sm text-gray-500 text-center md:text-right">
-            © {currentYear} Cobra Wear. All rights reserved.
+            © {currentYear} Cobraa Wear. All rights reserved.
           </p>
         </div>
       </div>

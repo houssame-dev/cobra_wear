@@ -316,9 +316,9 @@ export default function Hero() {
             {[
               { name: 'T-Shirts', image: '/images/categories/t-shirts.png', category: 'tshirts' },
               { name: 'Hoodies', image: '/images/categories/hoodies.png', category: 'hoodies' },
-              { name: 'Shorts', image: '/images/categories/shorts.png', category: 'shorts' },
-              { name: 'Caps', image: '/images/categories/caps.png', category: 'caps' },
-              { name: 'Tote Bags', image: '/images/categories/tote-bags.png', category: 'bags' }
+              { name: 'Sweatshirts', image: '/images/categories/sweatshirts.png', category: 'sweatshirts' },
+              { name: 'Jackets', image: '/images/categories/jackets.png', category: 'jackets' },
+              { name: 'Pants', image: '/images/categories/pants.png', category: 'pants' }
             ].map((category) => (
               <Link
                 key={category.name}

@@ -29,16 +29,20 @@ export async function sendCustomerOrderConfirmation(orderData) {
     // Format cart items
     const itemsList = orderData.items
       .map((item, index) => {
-        return `${index + 1}. ${item.title} (${item.selectedSize}, ${item.selectedColor}) x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`;
+        const itemPrice = item.price || 0; // Handle null prices
+        return `${index + 1}. ${item.title} (${item.selectedSize}, ${item.selectedColor}) x${item.quantity} - ${itemPrice * item.quantity} DH`;
       })
       .join('\n');
 
     // Calculate totals
     const subtotal = orderData.items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
+      (sum, item) => {
+        const itemPrice = item.price || 0; // Handle null prices
+        return sum + itemPrice * item.quantity;
+      },
       0
     );
-    const shipping = subtotal > 100 ? 0 : 10;
+    const shipping = 30; // Flat 30 DH shipping for all Morocco
     const total = subtotal + shipping;
 
     const templateParams = {
@@ -55,9 +59,9 @@ export async function sendCustomerOrderConfirmation(orderData) {
       items_count: orderData.items.length,
       
       // Order Totals
-      subtotal: `$${subtotal.toFixed(2)}`,
-      shipping: shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`,
-      total: `$${total.toFixed(2)}`,
+      subtotal: `${subtotal} DH`,
+      shipping: `${shipping} DH`,
+      total: `${total} DH`,
       
       // Additional Information
       order_notes: orderData.notes || 'No additional notes',
@@ -65,7 +69,7 @@ export async function sendCustomerOrderConfirmation(orderData) {
       order_type: 'Regular Order',
       
       // Email subject
-      subject: `Order Confirmation - Cobra Wear`,
+      subject: `Order Confirmation - Cobraa Wear`,
     };
 
     const response = await emailjs.send(
@@ -138,7 +142,7 @@ export async function sendCustomerPODConfirmation(orderData) {
       order_type: 'Print-On-Demand Order',
       
       // Email subject
-      subject: `POD Order Confirmation - Cobra Wear`,
+      subject: `POD Order Confirmation - Cobraa Wear`,
     };
 
     const response = await emailjs.send(

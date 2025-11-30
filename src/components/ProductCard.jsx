@@ -111,8 +111,8 @@ export default function ProductCard({ product }) {
             {title}
           </h3>
         </Link>
-        <p className="text-lg sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-4" aria-label={`Price: ${price.toFixed(2)} dollars`}>
-          ${price.toFixed(2)}
+        <p className="text-lg sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-4" aria-label={`Price: ${price} DH`}>
+          {price ? `${price} DH` : 'Price Coming Soon'}
         </p>
         
         {/* Spacer to push buttons to bottom */}
@@ -125,7 +125,7 @@ export default function ProductCard({ product }) {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                if (!inStock || isAddingToCart) return;
+                if (!inStock || isAddingToCart || !price) return;
                 
                 setIsAddingToCart(true);
                 // Add with default size and color (first available)
@@ -136,9 +136,9 @@ export default function ProductCard({ product }) {
                 
                 setTimeout(() => setIsAddingToCart(false), 800);
               }}
-              disabled={!inStock || isAddingToCart}
+              disabled={!inStock || isAddingToCart || !price}
               className={`p-2.5 sm:p-3 rounded-lg transition-all duration-300 ${
-                inStock && !isAddingToCart
+                inStock && !isAddingToCart && price
                   ? 'bg-black text-white hover:bg-gray-800 hover:scale-110'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
@@ -168,7 +168,7 @@ export default function ProductCard({ product }) {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                if (!inStock || isBuyingNow) return;
+                if (!inStock || isBuyingNow || !price) return;
                 
                 setIsBuyingNow(true);
                 const defaultSize = product.sizes?.[0] || 'M';
@@ -180,15 +180,15 @@ export default function ProductCard({ product }) {
                   router.push('/cart');
                 }, 500);
               }}
-              disabled={!inStock || isBuyingNow}
+              disabled={!inStock || isBuyingNow || !price}
               className={`w-full py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
-                inStock && !isBuyingNow
+                inStock && !isBuyingNow && price
                   ? 'bg-black text-white hover:bg-gray-800 hover:scale-[1.02]'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
-              aria-label="Buy now"
+              aria-label={price ? "Buy now" : "Price coming soon"}
             >
-              {isBuyingNow ? 'Adding...' : 'Buy Now'}
+              {isBuyingNow ? 'Adding...' : price ? 'Buy Now' : 'Price Coming Soon'}
             </button>
             {/* Tooltip */}
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">

@@ -6,8 +6,32 @@
 import ImprovedPodUploadForm from '@/components/ImprovedPodUploadForm';
 
 export const metadata = {
-  title: 'Custom Print-On-Demand - Cobra Wear',
-  description: 'Create your own custom designs with our Print-On-Demand service.',
+  title: 'Custom Print-On-Demand',
+  description: 'Create your own custom designs with our Print-On-Demand service. Choose from t-shirts, hoodies, shorts, sweatshirts, and pants. Upload your designs and we\'ll bring your vision to life with premium quality printing.',
+  keywords: [
+    'print on demand',
+    'custom clothing',
+    'custom t-shirts',
+    'custom hoodies',
+    'custom design',
+    'POD',
+    'personalized clothing',
+    'Morocco',
+  ],
+  openGraph: {
+    title: 'Custom Print-On-Demand - Cobraa Wear',
+    description: 'Create your own custom designs with our Print-On-Demand service. Premium quality printing on t-shirts, hoodies, shorts, sweatshirts, and pants.',
+    url: '/pod',
+    images: ['/images/cobraa_wear_logo_1.png'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Custom Print-On-Demand - Cobraa Wear',
+    description: 'Create your own custom designs with our Print-On-Demand service.',
+  },
+  alternates: {
+    canonical: '/pod',
+  },
 };
 
 export default function PodPage() {

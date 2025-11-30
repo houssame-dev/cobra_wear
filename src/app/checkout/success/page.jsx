@@ -102,7 +102,16 @@ export default function OrderSuccessPage() {
 }
 
 export const metadata = {
-  title: 'Order Successful - Cobra Wear',
-  description: 'Your order has been placed successfully.',
+  title: 'Order Successful',
+  description: 'Your order has been placed successfully. We will contact you soon to confirm your order and arrange delivery.',
+  robots: {
+    index: false,
+    follow: false,
+  },
+  openGraph: {
+    title: 'Order Successful - Cobraa Wear',
+    description: 'Your order has been placed successfully.',
+    url: '/checkout/success',
+  },
 };
 

@@ -85,7 +85,7 @@ export default function CartItem({ item }) {
 
           {/* Price */}
           <p className="text-sm sm:text-base text-gray-600 mb-3">
-            <span className="font-bold text-black text-lg sm:text-xl">${item.price.toFixed(2)}</span> each
+            <span className="font-bold text-black text-lg sm:text-xl">{item.price ? `${item.price} DH` : 'Price Coming Soon'}</span> each
           </p>
         </div>
 
@@ -112,7 +112,7 @@ export default function CartItem({ item }) {
 
           {/* Total Price */}
           <p className="font-bold text-xl">
-            ${(item.price * item.quantity).toFixed(2)}
+            {item.price ? `${item.price * item.quantity} DH` : 'Price Coming Soon'}
           </p>
         </div>
       </div>

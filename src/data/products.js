@@ -1,5 +1,5 @@
 /**
- * Product Catalog for Coobraa
+ * Product Catalog for Cobraa Wear
  * All products available in the store
  */
 
@@ -12,7 +12,7 @@ export const products = [
     title: 'Classic Black Hoodie',
     category: 'hoodies',
     style: 'streetwear', // New: style field
-    price: 49.99,
+    price: 229, // Hoodies: 229 DH
     description: 'Premium quality hoodie made from 100% organic cotton. Features a comfortable fit and durable construction. Perfect for everyday wear.',
     images: [
       productPlaceholders.hoodie,
@@ -40,7 +40,7 @@ export const products = [
     title: 'Minimal White T-Shirt',
     category: 'tshirts',
     style: 'streetwear',
-    price: 29.99,
+    price: 139, // T-Shirts: 139 DH
     description: 'Clean and minimal t-shirt design. Perfect for everyday wear with a comfortable, breathable fabric.',
     images: [
       productPlaceholders.tshirt,
@@ -64,85 +64,29 @@ export const products = [
   },
   {
     id: 3,
-    slug: 'premium-grey-shorts',
-    title: 'Premium Grey Shorts',
-    category: 'shorts',
+    slug: 'classic-sweatshirt',
+    title: 'Classic Sweatshirt',
+    category: 'sweatshirts',
     style: 'streetwear',
-    price: 39.99,
-    description: 'Comfortable athletic shorts perfect for workouts or casual wear. Made with moisture-wicking fabric.',
+    price: 149, // Sweatshirts: 149 DH
+    description: 'Comfortable classic sweatshirt perfect for casual wear. Made with premium cotton blend fabric.',
     images: [
-      productPlaceholders.shorts,
-      productPlaceholders.shorts,
+      productPlaceholders.hoodie, // Using hoodie placeholder as fallback
+      productPlaceholders.hoodie,
     ],
-    sizes: ['S', 'M', 'L', 'XL'],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     colors: [
+      { name: 'Black', hex: '#000000' },
       { name: 'Grey', hex: '#9CA3AF' },
-      { name: 'Black', hex: '#000000' },
-      { name: 'Navy', hex: '#1E3A8A' },
-    ],
-    inStock: true,
-    featured: false,
-    features: [
-      'Moisture-Wicking',
-      'Athletic Fit',
-      'Elastic Waistband',
-      'Side Pockets',
-      'Quick Dry',
-    ],
-  },
-  {
-    id: 4,
-    slug: 'urban-black-cap',
-    title: 'Urban Black Cap',
-    category: 'caps',
-    style: 'gang',
-    price: 24.99,
-    description: 'Stylish urban cap with adjustable strap. Features embroidered details and quality construction.',
-    images: [
-      productPlaceholders.cap,
-      productPlaceholders.cap,
-    ],
-    sizes: ['One Size'],
-    colors: [
-      { name: 'Black', hex: '#000000' },
-      { name: 'White', hex: '#FFFFFF' },
-      { name: 'Grey', hex: '#9CA3AF' },
-    ],
-    inStock: true,
-    featured: false,
-    features: [
-      'Adjustable Strap',
-      'Embroidered Logo',
-      'Curved Brim',
-      'Breathable Fabric',
-      'Unstructured',
-    ],
-  },
-  {
-    id: 5,
-    slug: 'eco-tote-bag',
-    title: 'Eco Tote Bag',
-    category: 'bags',
-    style: 'streetwear',
-    price: 19.99,
-    description: 'Eco-friendly tote bag made from sustainable materials. Spacious and durable for everyday use.',
-    images: [
-      productPlaceholders.bag,
-      productPlaceholders.bag,
-    ],
-    sizes: ['One Size'],
-    colors: [
-      { name: 'Natural', hex: '#F5F5DC' },
-      { name: 'Black', hex: '#000000' },
       { name: 'Navy', hex: '#1E3A8A' },
     ],
     inStock: true,
     featured: true,
     features: [
-      'Eco-Friendly Material',
-      'Reinforced Handles',
-      'Large Capacity',
-      'Reusable',
+      'Premium Cotton Blend',
+      'Comfortable Fit',
+      'Ribbed Cuffs',
+      'Kangaroo Pocket',
       'Machine Washable',
     ],
   },
@@ -152,7 +96,7 @@ export const products = [
     title: 'Oversized Hoodie',
     category: 'hoodies',
     style: 'gang',
-    price: 54.99,
+    price: 229, // Hoodies: 229 DH
     description: 'Trendy oversized hoodie with premium fabric. Perfect for a relaxed, comfortable style.',
     images: [
       productPlaceholders.hoodie,
@@ -180,7 +124,7 @@ export const products = [
     title: 'Essential Black T-Shirt',
     category: 'tshirts',
     style: 'streetwear',
-    price: 27.99,
+    price: 139, // T-Shirts: 139 DH
     description: 'Essential wardrobe staple. Premium black t-shirt with perfect fit and exceptional comfort.',
     images: [
       productPlaceholders.tshirt,
@@ -203,29 +147,58 @@ export const products = [
   },
   {
     id: 8,
-    slug: 'sport-cap-white',
-    title: 'Sport Cap White',
-    category: 'caps',
+    slug: 'premium-jacket',
+    title: 'Premium Jacket',
+    category: 'jackets',
     style: 'streetwear',
-    price: 22.99,
-    description: 'Clean white sport cap perfect for any occasion. Adjustable fit with breathable design.',
+    price: null, // TODO: Price not available yet - Jackets
+    description: 'Premium quality jacket with modern design. Perfect for all seasons with durable construction.',
     images: [
-      productPlaceholders.cap,
-      productPlaceholders.cap,
+      productPlaceholders.hoodie, // Using hoodie placeholder as fallback
+      productPlaceholders.hoodie,
     ],
-    sizes: ['One Size'],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     colors: [
-      { name: 'White', hex: '#FFFFFF' },
       { name: 'Black', hex: '#000000' },
+      { name: 'Navy', hex: '#1E3A8A' },
+      { name: 'Grey', hex: '#9CA3AF' },
     ],
     inStock: true,
     featured: false,
     features: [
-      'Lightweight',
-      'Adjustable Back',
-      'Moisture Wicking',
-      'UV Protection',
-      'Easy Clean',
+      'Water Resistant',
+      'Premium Material',
+      'Multiple Pockets',
+      'Adjustable Cuffs',
+      'Durable Zipper',
+    ],
+  },
+  {
+    id: 9,
+    slug: 'classic-pants',
+    title: 'Classic Pants',
+    category: 'pants',
+    style: 'streetwear',
+    price: null, // TODO: Price not available yet - Pants
+    description: 'Classic fit pants with premium fabric. Comfortable and stylish for everyday wear.',
+    images: [
+      productPlaceholders.hoodie, // Using hoodie placeholder as fallback
+      productPlaceholders.hoodie,
+    ],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: [
+      { name: 'Black', hex: '#000000' },
+      { name: 'Navy', hex: '#1E3A8A' },
+      { name: 'Grey', hex: '#9CA3AF' },
+    ],
+    inStock: true,
+    featured: false,
+    features: [
+      'Premium Fabric',
+      'Classic Fit',
+      'Elastic Waistband',
+      'Multiple Pockets',
+      'Easy Care',
     ],
   },
 ];
@@ -251,9 +224,9 @@ export const categories = [
   { id: 'all', name: 'All Products', slug: 'all' },
   { id: 'hoodies', name: 'Hoodies', slug: 'hoodies' },
   { id: 'tshirts', name: 'T-Shirts', slug: 'tshirts' },
-  { id: 'shorts', name: 'Shorts', slug: 'shorts' },
-  { id: 'caps', name: 'Caps', slug: 'caps' },
-  { id: 'bags', name: 'Bags', slug: 'bags' },
+  { id: 'sweatshirts', name: 'Sweatshirts', slug: 'sweatshirts' },
+  { id: 'jackets', name: 'Jackets', slug: 'jackets' },
+  { id: 'pants', name: 'Pants', slug: 'pants' },
 ];
 
 export const styles = [

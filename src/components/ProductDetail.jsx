@@ -104,7 +104,7 @@ export default function ProductDetail({ product }) {
               {product.category}
             </p>
             <h1 className="text-4xl font-bold mb-3">{product.title}</h1>
-            <p className="text-3xl font-bold">${product.price.toFixed(2)}</p>
+            <p className="text-3xl font-bold">{product.price ? `${product.price} DH` : 'Price Coming Soon'}</p>
           </div>
 
           <p className="text-lg text-gray-600 leading-relaxed">
@@ -185,20 +185,29 @@ export default function ProductDetail({ product }) {
           {/* Add to Cart Buttons */}
           <div className="space-y-3 pt-6">
             {product.inStock ? (
-              <>
+              product.price ? (
+                <>
+                  <button
+                    onClick={handleAddToCart}
+                    className="w-full btn-primary text-lg py-4"
+                  >
+                    Add to Cart - {product.price * quantity} DH
+                  </button>
+                  <button
+                    onClick={handleBuyNow}
+                    className="w-full btn-secondary text-lg py-4"
+                  >
+                    Buy Now
+                  </button>
+                </>
+              ) : (
                 <button
-                  onClick={handleAddToCart}
-                  className="w-full btn-primary text-lg py-4"
+                  disabled
+                  className="w-full bg-gray-300 text-gray-500 cursor-not-allowed text-lg py-4 rounded-lg"
                 >
-                  Add to Cart - ${(product.price * quantity).toFixed(2)}
+                  Price Coming Soon
                 </button>
-                <button
-                  onClick={handleBuyNow}
-                  className="w-full btn-secondary text-lg py-4"
-                >
-                  Buy Now
-                </button>
-              </>
+              )
             ) : (
               <button
                 disabled

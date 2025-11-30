@@ -20,7 +20,7 @@ export function CartProvider({ children }) {
 
   // Load cart from localStorage on mount
   useEffect(() => {
-    const savedCart = localStorage.getItem('coobraa_cart');
+    const savedCart = localStorage.getItem('cobraa_cart');
     if (savedCart) {
       try {
         setCart(JSON.parse(savedCart));
@@ -34,7 +34,7 @@ export function CartProvider({ children }) {
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     if (isLoaded) {
-      localStorage.setItem('coobraa_cart', JSON.stringify(cart));
+      localStorage.setItem('cobraa_cart', JSON.stringify(cart));
     }
   }, [cart, isLoaded]);
 
@@ -157,7 +157,10 @@ export function CartProvider({ children }) {
 
   // Get cart totals
   const getCartTotal = () => {
-    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cart.reduce((total, item) => {
+      const itemPrice = item.price || 0; // Handle null prices (price coming soon)
+      return total + itemPrice * item.quantity;
+    }, 0);
   };
 
   const getCartItemsCount = () => {

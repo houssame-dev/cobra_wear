@@ -89,7 +89,7 @@ export default function CheckoutPage() {
 
       // Track purchase in analytics
       const subtotal = getCartTotal();
-      const shipping = subtotal > 100 ? 0 : 10;
+      const shipping = 30; // Flat 30 DH shipping for all Morocco
       trackPurchase({ total: subtotal + shipping });
 
       // Clear cart
@@ -294,7 +294,7 @@ export default function CheckoutPage() {
                       </p>
                     </div>
                     <p className="font-bold">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      {(item.price * item.quantity)} DH
                     </p>
                   </div>
                 ))}
