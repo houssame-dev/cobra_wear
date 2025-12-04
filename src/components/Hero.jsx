@@ -15,7 +15,7 @@ import { useCart } from '@/context/CartContext';
 const FEATURED_PRODUCT = {
   id: 'hero-featured',
   title: 'Premium T-Shirt Collection',
-  price: 129, // 129 DH
+  price: 139,// 139 DH
   images: ['/images/hero-product.png'],
   slug: 'featured-tshirt',
   category: 'tshirts',
@@ -78,68 +78,116 @@ export default function Hero() {
 
   return (
     <section className="relative bg-white overflow-hidden">
-      {/* Background Decorative Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gray-50 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-gray-50 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+      {/* Mobile Hero Section - Full Screen Video (max-width: 768px) */}
+      <div className="md:hidden relative w-full h-screen">
+        {/* Full-Screen Video */}
+        <video 
+          src="/videos/hero-mobile.mp4" 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        
+        {/* Buttons Container - Positioned at bottom with spacing */}
+        <div className="absolute bottom-24 left-0 right-0 px-4 z-10">
+          <div className="flex gap-3">
+            {/* Collection Button */}
+            <Link 
+              href="/products" 
+              className="flex-1 group relative inline-flex items-center justify-center px-4 py-3 text-sm font-bold text-white bg-transparent border-2 border-white rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+            >
+              <span className="relative z-10">Collection</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-900 to-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </Link>
+            
+            {/* Print-On-Demand Button */}
+            <Link 
+              href="/pod" 
+              className="flex-1 group relative inline-flex items-center justify-center px-4 py-3 text-sm font-bold text-white bg-transparent border-2 border-white rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+            >
+              <span className="relative z-10 flex items-center">
+                Print-On-Demand
+                <svg 
+                  className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-900 to-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </Link>
+          </div>
+        </div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left Content */}
-          <div 
-            className={`space-y-6 sm:space-y-8 transition-all duration-1000 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            {/* Headline */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold leading-none tracking-tight">
-              <span className="block">Premium</span>
-              <span className="block">Style.</span>
-              <span className="block text-gray-400">Your Design.</span>
-            </h1>
+      {/* Desktop Hero Section (min-width: 769px) - Keep existing design */}
+      <div className="hidden md:block" style={{ height: 'calc(100vh - 4.5rem)' }}>
+        {/* Background Decorative Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gray-50 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-gray-50 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+        </div>
 
-            {/* Description */}
-            <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 leading-relaxed max-w-xl">
-              Discover our exclusive collection of premium clothing or create your own custom designs with our Print-On-Demand service.
-            </p>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Left Content */}
+            <div 
+              className={`space-y-6 sm:space-y-8 transition-all duration-1000 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`}
+            >
+              {/* Headline */}
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold leading-none tracking-tight">
+                <span className="block">Premium</span>
+                <span className="block">Style.</span>
+                <span className="block text-gray-400">Your Design.</span>
+              </h1>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link 
-                href="/products" 
-                className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-black rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-              >
-                <span className="relative z-10">Shop Now</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-900 to-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              </Link>
-              
-              <Link 
-                href="/pod" 
-                className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-black bg-white border-2 border-black rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:text-white"
-              >
-                <span className="relative z-10 flex items-center">
-                  Print-On-Demand
-                  <svg 
-                    className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </span>
-                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              </Link>
+              {/* Description */}
+              <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 leading-relaxed max-w-xl">
+                Discover our exclusive collection of premium clothing or create your own custom designs with our Print-On-Demand service.
+              </p>
+
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Link 
+                  href="/products" 
+                  className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-black rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                >
+                  <span className="relative z-10">Shop Now</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-gray-900 to-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </Link>
+                
+                <Link 
+                  href="/pod" 
+                  className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-black bg-white border-2 border-black rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:text-white"
+                >
+                  <span className="relative z-10 flex items-center">
+                    Print-On-Demand
+                    <svg 
+                      className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </span>
+                  <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </Link>
+              </div>
             </div>
-          </div>
 
-          {/* Right Content - Product Showcase */}
-          <div 
-            className={`relative transition-all duration-1000 delay-300 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
+            {/* Right Content - Product Showcase */}
+            <div 
+              className={`relative transition-all duration-1000 delay-300 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`}
+            >
             <div className="relative">
               {/* Main Product Showcase */}
               <div className="relative group">
@@ -202,11 +250,11 @@ export default function Hero() {
                         {/* Prices */}
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2 sm:gap-3">
-                            <span className="text-base sm:text-lg lg:text-xl line-through text-gray-400 font-medium">258 DH</span>
-                            <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">129 DH</span>
+                            <span className="text-base sm:text-lg lg:text-xl line-through text-gray-400 font-medium">258 DH (50% OFF)</span>
+                            <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">139 DH</span>
                           </div>
                           <div className="bg-yellow-400 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg animate-bounce-slow">
-                            <span className="text-xs sm:text-sm font-bold text-black">SAVE 129 DH</span>
+                            <span className="text-xs sm:text-sm font-bold text-black">SAVE 139 DH</span>
                           </div>
                         </div>
                         
@@ -267,9 +315,10 @@ export default function Hero() {
           </div>
         </div>
       </div>
+      </div>
 
-      {/* Bottom Wave Divider */}
-      <div className="absolute bottom-0 left-0 right-0">
+      {/* Bottom Wave Divider - Desktop Only */}
+      <div className="hidden md:block absolute bottom-0 left-0 right-0">
         <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
           <path d="M0 48h1440V0c-240 48-480 48-720 24C480 0 240 0 0 24v24z" fill="#fafafa"/>
         </svg>

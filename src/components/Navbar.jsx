@@ -9,24 +9,76 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const { getCartItemsCount } = useCart();
   const { getWishlistCount } = useWishlist();
+  const pathname = usePathname();
   const cartCount = getCartItemsCount();
   const wishlistCount = getWishlistCount();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const navRef = useRef(null);
+  
+  // Check if we're on the home page
+  const isHomePage = pathname === '/';
+
+  // Set initial background on mount
+  useEffect(() => {
+    if (navRef.current && typeof window !== 'undefined') {
+      const mobile = window.innerWidth < 768;
+      const scrolled = window.scrollY > 10;
+      if (mobile && !scrolled && isHomePage) {
+        navRef.current.style.backgroundColor = 'transparent';
+      } else {
+        navRef.current.style.backgroundColor = 'white';
+      }
+    }
+  }, [isHomePage]);
+
+  // Update background color based on mobile, scroll state, and home page
+  useEffect(() => {
+    if (navRef.current) {
+      if (isMobile && !scrolled && isHomePage) {
+        navRef.current.style.backgroundColor = 'transparent';
+      } else {
+        navRef.current.style.backgroundColor = 'white';
+      }
+    }
+  }, [isMobile, scrolled, isHomePage]);
 
   // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
+    // Set initial scroll state
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      // Immediately update background when mobile state changes
+      if (navRef.current) {
+        if (mobile && !scrolled && isHomePage) {
+          navRef.current.style.backgroundColor = 'transparent';
+        } else {
+          navRef.current.style.backgroundColor = 'white';
+        }
+      }
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [scrolled, isHomePage]);
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -49,15 +101,22 @@ export default function Navbar() {
     { href: '/products?category=hoodies', label: 'Hoodies', ariaLabel: 'Shop hoodies' },
   ];
 
+  // Icon color: white when transparent navbar (mobile at top on home page only), black otherwise
+  const iconColor = isMobile && !scrolled && isHomePage ? 'text-white' : 'text-black';
+
   return (
     <nav 
-      className={`border-b border-gray-200 bg-white sticky top-0 z-50 transition-shadow duration-300 ${
-        scrolled ? 'shadow-md' : ''
+      ref={navRef}
+      className={`w-full md:border-b md:border-gray-200 border-transparent ${isMobile ? 'fixed' : 'sticky'} top-0 z-50 transition-all duration-300 ${
+        scrolled ? 'md:shadow-md' : ''
       }`}
+      style={{ 
+        backgroundColor: isMobile && !scrolled && isHomePage ? 'transparent' : 'white'
+      }}
       role="navigation" 
       aria-label="Main navigation"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={`${isMobile ? 'w-full' : 'max-w-7xl mx-auto'} px-4 sm:px-6 lg:px-8`}>
         <div className="flex justify-between items-center h-16 sm:h-18">
           {/* Logo */}
           <Link 
@@ -67,7 +126,7 @@ export default function Navbar() {
             onClick={closeMenu}
           >
             {/* Logo Image */}
-            <div className="relative w-10 h-10 sm:w-12 sm:h-12">
+            <div className={`relative w-10 h-10 sm:w-12 sm:h-12 ${isMobile && !scrolled && isHomePage ? 'brightness-0 invert' : ''}`}>
               <Image
                 src="/images/cobraa_wear_logo_1.png"
                 alt="Cobraa Wear Logo"
@@ -160,7 +219,7 @@ export default function Navbar() {
             {/* Mobile Wishlist Icon */}
             <Link 
               href="/wishlist" 
-              className="relative hover:text-gray-600 transition-all duration-300 active:scale-95"
+              className={`relative ${iconColor} transition-all duration-300 active:scale-95 ${scrolled || !isMobile ? 'hover:text-gray-600' : 'hover:text-gray-200'}`}
               aria-label={wishlistCount > 0 ? `Wishlist with ${wishlistCount} items` : 'Wishlist (empty)'}
               onClick={closeMenu}
             >
@@ -177,7 +236,7 @@ export default function Navbar() {
             {/* Mobile Cart Icon */}
             <Link 
               href="/cart" 
-              className="relative hover:text-gray-600 transition-all duration-300 active:scale-95"
+              className={`relative ${iconColor} transition-all duration-300 active:scale-95 ${scrolled || !isMobile ? 'hover:text-gray-600' : 'hover:text-gray-200'}`}
               aria-label={cartCount > 0 ? `Shopping cart with ${cartCount} items` : 'Shopping cart (empty)'}
               onClick={closeMenu}
             >
@@ -193,7 +252,7 @@ export default function Navbar() {
 
             {/* Mobile Language Icon */}
             <button 
-              className="hover:text-gray-600 transition-all duration-300 active:scale-95"
+              className={`${iconColor} transition-all duration-300 active:scale-95 ${scrolled || !isMobile ? 'hover:text-gray-600' : 'hover:text-gray-200'}`}
               aria-label="Change language"
               title="Language (Coming Soon)"
             >
@@ -205,24 +264,24 @@ export default function Navbar() {
             {/* Hamburger Button */}
             <button
               onClick={toggleMenu}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-all duration-300 active:scale-95 ml-1"
+              className={`p-2 ${scrolled || !isMobile || !isHomePage ? 'hover:bg-gray-100' : 'hover:bg-white/20'} rounded-lg transition-all duration-300 active:scale-95 ml-1`}
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
             >
               <div className="w-6 h-5 flex flex-col justify-between">
                 <span 
-                  className={`block h-0.5 w-full bg-black transition-all duration-300 ${
+                  className={`block h-0.5 w-full ${isMobile && !scrolled && isHomePage ? 'bg-white' : 'bg-black'} transition-all duration-300 ${
                     isMenuOpen ? 'rotate-45 translate-y-2' : ''
                   }`}
                 ></span>
                 <span 
-                  className={`block h-0.5 w-full bg-black transition-all duration-300 ${
+                  className={`block h-0.5 w-full ${isMobile && !scrolled && isHomePage ? 'bg-white' : 'bg-black'} transition-all duration-300 ${
                     isMenuOpen ? 'opacity-0' : ''
                   }`}
                 ></span>
                 <span 
-                  className={`block h-0.5 w-full bg-black transition-all duration-300 ${
+                  className={`block h-0.5 w-full ${isMobile && !scrolled && isHomePage ? 'bg-white' : 'bg-black'} transition-all duration-300 ${
                     isMenuOpen ? '-rotate-45 -translate-y-2' : ''
                   }`}
                 ></span>

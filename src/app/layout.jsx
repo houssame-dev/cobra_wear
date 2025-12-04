@@ -4,6 +4,7 @@ import { WishlistProvider } from '@/context/WishlistContext'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
+import PageWrapper from '@/components/PageWrapper'
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cobraawear.com'),
@@ -99,7 +100,9 @@ export default function RootLayout({ children }) {
         <CartProvider>
           <WishlistProvider>
             <Navbar />
-            {children}
+            <PageWrapper>
+              {children}
+            </PageWrapper>
             <Footer />
           </WishlistProvider>
         </CartProvider>

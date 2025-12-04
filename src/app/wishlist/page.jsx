@@ -131,7 +131,9 @@ export default function WishlistPage() {
                     {product.title}
                   </h3>
                 </Link>
-                <p className="text-xl font-bold mb-4">${product.price.toFixed(2)}</p>
+                <p className="text-xl font-bold mb-4">
+                  {product.price ? `${product.price} DH` : 'Price Coming Soon'}
+                </p>
 
                 {/* Spacer */}
                 <div className="flex-1"></div>
