@@ -96,7 +96,7 @@ export default function Hero() {
             {/* Collection Button */}
             <Link 
               href="/products" 
-              className="flex-1 group relative inline-flex items-center justify-center px-4 py-3 text-sm font-bold text-white bg-transparent border-2 border-white rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              className="flex-1 group relative inline-flex items-center justify-center px-0 py-2 text-sm font-bold text-white bg-transparent border-2 border-white rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             >
               <span className="relative z-10">Collection</span>
               <div className="absolute inset-0 bg-gradient-to-r from-gray-900 to-black opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -105,7 +105,7 @@ export default function Hero() {
             {/* Print-On-Demand Button */}
             <Link 
               href="/pod" 
-              className="flex-1 group relative inline-flex items-center justify-center px-4 py-3 text-sm font-bold text-white bg-transparent border-2 border-white rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              className="flex-1 group relative inline-flex items-center justify-center px-0 py-2 text-sm font-bold text-white bg-transparent border-2 border-white rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             >
               <span className="relative z-10 flex items-center">
                 Print-On-Demand
@@ -324,8 +324,8 @@ export default function Hero() {
         </svg>
       </div>
 
-      {/* Trust Badges Section */}
-      <div className="bg-gray-50 border-t border-gray-200">
+      {/* Trust Badges Section - Desktop Only */}
+      <div className="hidden md:block bg-gray-50 border-t border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             <div className="inline-flex items-center space-x-2 bg-black text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-medium shadow-lg hover:scale-105 transition-transform">
@@ -355,8 +355,8 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Categories Section */}
-      <div className="bg-gray-50 border-b border-gray-200">
+      {/* Categories Section - Desktop Only */}
+      <div className="hidden md:block bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">
             Shop by Category

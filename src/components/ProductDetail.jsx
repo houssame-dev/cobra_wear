@@ -5,7 +5,7 @@
  * Interactive product detail with Add to Cart
  */
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
@@ -19,6 +19,16 @@ export default function ProductDetail({ product }) {
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.name || '');
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
+  
+  // Image handling for hoodies (back/front)
+  const backImage = product.images && product.images[0];
+  const frontImage = product.images && product.images[1];
+  const hasMultipleImages = product.category === 'hoodies' && backImage && frontImage;
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // 0 = back, 1 = front
+  
+  // Swipe handlers
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   const handleAddToCart = () => {
     if (!selectedSize || !selectedColor) {
@@ -40,6 +50,46 @@ export default function ProductDetail({ product }) {
   const handleBuyNow = () => {
     handleAddToCart();
     router.push('/cart');
+  };
+
+  // Handle swipe gestures
+  const handleTouchStart = (e) => {
+    if (!hasMultipleImages) return;
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    if (!hasMultipleImages) return;
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!hasMultipleImages) return;
+    const swipeDistance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50; // Minimum distance for a swipe
+
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        // Swipe left - show front
+        setCurrentImageIndex(1);
+      } else {
+        // Swipe right - show back
+        setCurrentImageIndex(0);
+      }
+    }
+  };
+
+  // Handle hover for desktop
+  const handleMouseEnter = () => {
+    if (hasMultipleImages) {
+      setCurrentImageIndex(1); // Show front on hover
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (hasMultipleImages) {
+      setCurrentImageIndex(0); // Show back when not hovering
+    }
   };
 
   return (
@@ -69,13 +119,24 @@ export default function ProductDetail({ product }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Product Images */}
         <div className="space-y-4">
-          <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden border border-gray-200 relative">
-            {product.images[0] ? (
+          <div 
+            className="aspect-square bg-gray-100 rounded-2xl overflow-hidden border border-gray-200 relative cursor-pointer"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            {/* Back Image (Main) */}
+            {backImage ? (
               <Image
-                src={product.images[0]}
-                alt={product.title}
+                src={backImage}
+                alt={`${product.title} - Back view`}
                 fill
-                className="object-cover"
+                className={`object-cover transition-opacity duration-500 ${
+                  hasMultipleImages && currentImageIndex === 1 ? 'opacity-0' : 'opacity-100'
+                }`}
+                priority={currentImageIndex === 0}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
@@ -94,6 +155,32 @@ export default function ProductDetail({ product }) {
                 </svg>
               </div>
             )}
+
+            {/* Front Image (Swipe/Hover to view) */}
+            {hasMultipleImages && frontImage && (
+              <Image
+                src={frontImage}
+                alt={`${product.title} - Front view`}
+                fill
+                className={`object-cover transition-opacity duration-500 ${
+                  currentImageIndex === 1 ? 'opacity-100' : 'opacity-0'
+                }`}
+                priority={currentImageIndex === 1}
+              />
+            )}
+
+            {/* Swipe Indicator (Mobile) */}
+            {hasMultipleImages && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  currentImageIndex === 0 ? 'bg-black' : 'bg-gray-400'
+                }`}></div>
+                <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  currentImageIndex === 1 ? 'bg-black' : 'bg-gray-400'
+                }`}></div>
+              </div>
+            )}
+
           </div>
         </div>
 
@@ -124,7 +211,7 @@ export default function ProductDetail({ product }) {
                   className={`px-6 py-3 border-2 rounded-lg font-medium transition-all ${
                     selectedSize === size
                       ? 'border-black bg-black text-white'
-                      : 'border-gray-300 hover:border-black'
+                      : 'border-gray-300 md:hover:border-black'
                   }`}
                 >
                   {size}
@@ -146,7 +233,7 @@ export default function ProductDetail({ product }) {
                   className={`px-6 py-3 border-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
                     selectedColor === color.name
                       ? 'border-black bg-black text-white'
-                      : 'border-gray-300 hover:border-black'
+                      : 'border-gray-300 md:hover:border-black'
                   }`}
                 >
                   <div
@@ -168,14 +255,14 @@ export default function ProductDetail({ product }) {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-12 h-12 border-2 border-gray-300 rounded-lg hover:border-black transition-colors font-medium text-xl"
+                className="w-12 h-12 border-2 border-gray-300 rounded-lg md:hover:border-black transition-colors font-medium text-xl"
               >
                 −
               </button>
               <span className="text-2xl font-bold w-12 text-center">{quantity}</span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className="w-12 h-12 border-2 border-gray-300 rounded-lg hover:border-black transition-colors font-medium text-xl"
+                className="w-12 h-12 border-2 border-gray-300 rounded-lg md:hover:border-black transition-colors font-medium text-xl"
               >
                 +
               </button>

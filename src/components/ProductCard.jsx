@@ -5,7 +5,7 @@
  * Modern, responsive card component for displaying products
  */
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -13,31 +13,113 @@ import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 
 export default function ProductCard({ product }) {
-  const { title, price, images, slug, inStock } = product;
-  const image = images && images[0];
+  const { title, price, images, slug, inStock, category } = product;
+  // For hoodies: first image is back (main), second is front
+  const backImage = images && images[0];
+  const frontImage = images && images[1];
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Only enable multiple images on desktop (not mobile)
+  const hasMultipleImages = category === 'hoodies' && backImage && frontImage && !isMobile;
+  
   const router = useRouter();
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isBuyingNow, setIsBuyingNow] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // 0 = back, 1 = front
+  
+  // Swipe handlers
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
   
   const inWishlist = isInWishlist(product.id);
 
+  // Detect mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      // On mobile, always show back image
+      if (mobile) {
+        setCurrentImageIndex(0);
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Handle swipe gestures (Desktop only - disabled on mobile)
+  const handleTouchStart = (e) => {
+    if (!hasMultipleImages || isMobile) return;
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    if (!hasMultipleImages || isMobile) return;
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!hasMultipleImages || isMobile) return;
+    const swipeDistance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50; // Minimum distance for a swipe
+
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        // Swipe left - show front
+        setCurrentImageIndex(1);
+      } else {
+        // Swipe right - show back
+        setCurrentImageIndex(0);
+      }
+    }
+  };
+
+  // Handle hover for desktop
+  const handleMouseEnter = () => {
+    if (hasMultipleImages) {
+      setCurrentImageIndex(1); // Show front on hover
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (hasMultipleImages) {
+      setCurrentImageIndex(0); // Show back when not hovering
+    }
+  };
+
   return (
     <article 
-      className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full"
+      className={`group bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 flex flex-col h-full ${
+        !isMobile ? 'hover:shadow-2xl hover:-translate-y-1' : ''
+      }`}
       aria-label={`${title} product card`}
     >
       {/* Product Image */}
       <div className="relative">
         <Link href={`/products/${slug}`} aria-label={`View ${title} details`}>
-          <div className="relative aspect-square bg-gray-50 overflow-hidden cursor-pointer">
-            {image ? (
+          <div 
+            className="relative aspect-square bg-gray-50 overflow-hidden cursor-pointer"
+            onTouchStart={hasMultipleImages ? handleTouchStart : undefined}
+            onTouchMove={hasMultipleImages ? handleTouchMove : undefined}
+            onTouchEnd={hasMultipleImages ? handleTouchEnd : undefined}
+            onMouseEnter={hasMultipleImages ? handleMouseEnter : undefined}
+            onMouseLeave={hasMultipleImages ? handleMouseLeave : undefined}
+          >
+            {/* Back Image (Main) */}
+            {backImage ? (
               <Image
-                src={image}
-                alt={`${title} product image`}
+                src={backImage}
+                alt={`${title} - Back view`}
                 fill
-                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                className={`object-cover transition-opacity duration-500 ${
+                  hasMultipleImages && currentImageIndex === 1 ? 'opacity-0' : 'opacity-100'
+                } ${!hasMultipleImages ? 'group-hover:scale-110 transition-transform duration-500' : ''}`}
+                priority={currentImageIndex === 0}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center" role="img" aria-label="Product image placeholder">
@@ -57,22 +139,49 @@ export default function ProductCard({ product }) {
                 </svg>
               </div>
             )}
+
+            {/* Front Image (Swipe/Hover to view) */}
+            {hasMultipleImages && frontImage && (
+              <Image
+                src={frontImage}
+                alt={`${title} - Front view`}
+                fill
+                className={`object-cover transition-opacity duration-500 ${
+                  currentImageIndex === 1 ? 'opacity-100' : 'opacity-0'
+                }`}
+                priority={currentImageIndex === 1}
+              />
+            )}
+            
+            {/* Swipe Indicator (Desktop Only) */}
+            {hasMultipleImages && !isMobile && (
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                <div className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                  currentImageIndex === 0 ? 'bg-white' : 'bg-white/50'
+                }`}></div>
+                <div className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                  currentImageIndex === 1 ? 'bg-white' : 'bg-white/50'
+                }`}></div>
+              </div>
+            )}
             
             {/* Out of Stock Overlay */}
             {!inStock && (
-              <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center" role="status">
+              <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center z-20" role="status">
                 <span className="bg-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg font-bold text-xs sm:text-sm">
                   OUT OF STOCK
                 </span>
               </div>
             )}
 
-            {/* Hover Overlay */}
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
-              <span className="text-white font-bold text-sm sm:text-base opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                View Details
-              </span>
-            </div>
+            {/* Hover Overlay - Desktop Only */}
+            {!isMobile && (
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center z-10">
+                <span className="text-white font-bold text-sm sm:text-base opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                  View Details
+                </span>
+              </div>
+            )}
           </div>
         </Link>
 
@@ -83,10 +192,10 @@ export default function ProductCard({ product }) {
             e.stopPropagation();
             toggleWishlist(product);
           }}
-          className={`absolute top-3 right-3 z-10 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110 ${
+          className={`absolute top-3 right-3 z-10 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all duration-300 md:hover:scale-110 ${
             inWishlist
               ? 'bg-red-500 text-white border-none shadow-lg'
-              : 'bg-white text-black border border-black hover:bg-gray-50'
+              : 'bg-white text-black border border-black md:hover:bg-gray-50'
           }`}
           aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
         >
@@ -107,7 +216,7 @@ export default function ProductCard({ product }) {
       {/* Product Info */}
       <div className="p-3 sm:p-4 lg:p-6 flex flex-col flex-1">
         <Link href={`/products/${slug}`}>
-          <h3 className="text-sm sm:text-base lg:text-lg font-semibold mb-2 group-hover:text-gray-600 transition-colors cursor-pointer line-clamp-2">
+          <h3 className="text-sm sm:text-base lg:text-lg font-semibold mb-2 md:group-hover:text-gray-600 transition-colors cursor-pointer line-clamp-2">
             {title}
           </h3>
         </Link>
@@ -139,7 +248,7 @@ export default function ProductCard({ product }) {
               disabled={!inStock || isAddingToCart || !price}
               className={`p-2.5 sm:p-3 rounded-lg transition-all duration-300 ${
                 inStock && !isAddingToCart && price
-                  ? 'bg-black text-white hover:bg-gray-800 hover:scale-110'
+                  ? 'bg-black text-white md:hover:bg-gray-800 md:hover:scale-110'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
               aria-label="Add to cart"
@@ -156,11 +265,13 @@ export default function ProductCard({ product }) {
                 </svg>
               )}
             </button>
-            {/* Tooltip */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-              Add to Cart
-              <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
-            </div>
+            {/* Tooltip - Desktop Only */}
+            {!isMobile && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                Add to Cart
+                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+              </div>
+            )}
           </div>
 
           {/* Buy Now Button - Text */}
@@ -183,18 +294,20 @@ export default function ProductCard({ product }) {
               disabled={!inStock || isBuyingNow || !price}
               className={`w-full py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
                 inStock && !isBuyingNow && price
-                  ? 'bg-black text-white hover:bg-gray-800 hover:scale-[1.02]'
+                  ? 'bg-black text-white md:hover:bg-gray-800 md:hover:scale-[1.02]'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
               aria-label={price ? "Buy now" : "Price coming soon"}
             >
               {isBuyingNow ? 'Adding...' : price ? 'Buy Now' : 'Price Coming Soon'}
             </button>
-            {/* Tooltip */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-              Quick Checkout
-              <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
-            </div>
+            {/* Tooltip - Desktop Only */}
+            {!isMobile && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover/tooltip:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                Quick Checkout
+                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+              </div>
+            )}
           </div>
         </div>
       </div>

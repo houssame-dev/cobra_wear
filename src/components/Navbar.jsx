@@ -121,7 +121,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link 
             href="/" 
-            className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity z-50 group"
+            className="flex items-center gap-2 sm:gap-3 md:hover:opacity-80 transition-opacity z-50 group"
             aria-label="Cobraa Wear home"
             onClick={closeMenu}
           >
@@ -142,7 +142,7 @@ export default function Navbar() {
             {/* Text Links */}
             <Link 
               href="/pod" 
-              className="hover:text-gray-600 transition-colors font-medium"
+              className="md:hover:text-gray-600 transition-colors font-medium"
               role="menuitem"
               aria-label="Print on demand custom designs"
             >
@@ -150,7 +150,7 @@ export default function Navbar() {
             </Link>
             <Link 
               href="/products?category=tshirts" 
-              className="hover:text-gray-600 transition-colors font-medium"
+              className="md:hover:text-gray-600 transition-colors font-medium"
               role="menuitem"
               aria-label="Shop t-shirts"
             >
@@ -158,7 +158,7 @@ export default function Navbar() {
             </Link>
             <Link 
               href="/products?category=hoodies" 
-              className="hover:text-gray-600 transition-colors font-medium"
+              className="md:hover:text-gray-600 transition-colors font-medium"
               role="menuitem"
               aria-label="Shop hoodies"
             >
@@ -170,7 +170,7 @@ export default function Navbar() {
               {/* Wishlist Icon */}
               <Link 
                 href="/wishlist" 
-                className="relative hover:text-gray-600 transition-all duration-300 hover:scale-110"
+                className="relative md:hover:text-gray-600 transition-all duration-300 md:hover:scale-110"
                 role="menuitem"
                 aria-label={wishlistCount > 0 ? `Wishlist with ${wishlistCount} items` : 'Wishlist (empty)'}
               >
@@ -187,7 +187,7 @@ export default function Navbar() {
               {/* Cart Icon */}
               <Link 
                 href="/cart" 
-                className="relative hover:text-gray-600 transition-all duration-300 hover:scale-110"
+                className="relative md:hover:text-gray-600 transition-all duration-300 md:hover:scale-110"
                 role="menuitem"
                 aria-label={cartCount > 0 ? `Shopping cart with ${cartCount} items` : 'Shopping cart (empty)'}
               >
@@ -203,7 +203,7 @@ export default function Navbar() {
 
               {/* Language Icon (placeholder - functionality later) */}
               <button 
-                className="hover:text-gray-600 transition-all duration-300 hover:scale-110"
+                className="md:hover:text-gray-600 transition-all duration-300 md:hover:scale-110"
                 aria-label="Change language"
                 title="Language (Coming Soon)"
               >
@@ -219,7 +219,7 @@ export default function Navbar() {
             {/* Mobile Wishlist Icon */}
             <Link 
               href="/wishlist" 
-              className={`relative ${iconColor} transition-all duration-300 active:scale-95 ${scrolled || !isMobile ? 'hover:text-gray-600' : 'hover:text-gray-200'}`}
+              className={`relative ${iconColor} transition-all duration-300 active:scale-95 ${scrolled || !isMobile ? 'md:hover:text-gray-600' : 'md:hover:text-gray-200'}`}
               aria-label={wishlistCount > 0 ? `Wishlist with ${wishlistCount} items` : 'Wishlist (empty)'}
               onClick={closeMenu}
             >
@@ -236,7 +236,7 @@ export default function Navbar() {
             {/* Mobile Cart Icon */}
             <Link 
               href="/cart" 
-              className={`relative ${iconColor} transition-all duration-300 active:scale-95 ${scrolled || !isMobile ? 'hover:text-gray-600' : 'hover:text-gray-200'}`}
+              className={`relative ${iconColor} transition-all duration-300 active:scale-95 ${scrolled || !isMobile ? 'md:hover:text-gray-600' : 'md:hover:text-gray-200'}`}
               aria-label={cartCount > 0 ? `Shopping cart with ${cartCount} items` : 'Shopping cart (empty)'}
               onClick={closeMenu}
             >
@@ -252,7 +252,7 @@ export default function Navbar() {
 
             {/* Mobile Language Icon */}
             <button 
-              className={`${iconColor} transition-all duration-300 active:scale-95 ${scrolled || !isMobile ? 'hover:text-gray-600' : 'hover:text-gray-200'}`}
+              className={`${iconColor} transition-all duration-300 active:scale-95 ${scrolled || !isMobile ? 'md:hover:text-gray-600' : 'md:hover:text-gray-200'}`}
               aria-label="Change language"
               title="Language (Coming Soon)"
             >
@@ -264,7 +264,7 @@ export default function Navbar() {
             {/* Hamburger Button */}
             <button
               onClick={toggleMenu}
-              className={`p-2 ${scrolled || !isMobile || !isHomePage ? 'hover:bg-gray-100' : 'hover:bg-white/20'} rounded-lg transition-all duration-300 active:scale-95 ml-1`}
+              className={`p-2 ${scrolled || !isMobile || !isHomePage ? 'md:hover:bg-gray-100' : 'md:hover:bg-white/20'} rounded-lg transition-all duration-300 active:scale-95 ml-1`}
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
@@ -325,7 +325,7 @@ export default function Navbar() {
             {/* Close Button */}
             <button
               onClick={closeMenu}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 md:hover:bg-gray-100 rounded-lg transition-colors"
               aria-label="Close menu"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -362,7 +362,7 @@ export default function Navbar() {
                 href="https://www.instagram.com/cobraawear_/" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:border-black hover:bg-black hover:text-white transition-all duration-300"
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 md:hover:border-black md:hover:bg-black md:hover:text-white transition-all duration-300"
                 aria-label="Follow us on Instagram"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -375,7 +375,7 @@ export default function Navbar() {
                 href="https://www.tiktok.com/@cobraawear_" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:border-black hover:bg-black hover:text-white transition-all duration-300"
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 md:hover:border-black md:hover:bg-black md:hover:text-white transition-all duration-300"
                 aria-label="Follow us on TikTok"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -388,7 +388,7 @@ export default function Navbar() {
                 href="https://www.facebook.com/mouhcinprint" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:border-black hover:bg-black hover:text-white transition-all duration-300"
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 md:hover:border-black md:hover:bg-black md:hover:text-white transition-all duration-300"
                 aria-label="Follow us on Facebook"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -401,7 +401,7 @@ export default function Navbar() {
                 href="https://twitter.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:border-black hover:bg-black hover:text-white transition-all duration-300"
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 md:hover:border-black md:hover:bg-black md:hover:text-white transition-all duration-300"
                 aria-label="Follow us on X"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

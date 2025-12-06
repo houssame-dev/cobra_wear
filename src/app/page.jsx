@@ -3,26 +3,39 @@
  * Modern landing page with hero section and product listings
  */
 
+'use client';
+
+import { useEffect } from 'react';
 import Hero from '@/components/Hero';
 import ProductCard from '@/components/ProductCard';
 import { getFeaturedProducts } from '@/data/products';
 import Link from 'next/link';
-export const metadata = {
-  title: 'Home',
-  description: 'Discover premium clothing at Cobraa Wear. Shop hoodies, t-shirts, sweatshirts, jackets, and pants. Create custom designs with our Print-On-Demand service. Fast delivery across Morocco.',
-  openGraph: {
-    title: 'Cobraa Wear - Premium Clothing & Custom Print-On-Demand',
-    description: 'Shop premium clothing and create custom designs with our Print-On-Demand service.',
-    url: '/',
-    images: ['/images/cobraa_wear_logo_1.png'],
-  },
-  alternates: {
-    canonical: '/',
-  },
-};
 
 export default function HomePage() {
   const featuredProducts = getFeaturedProducts().slice(0, 3); // Limit to 3 products
+
+  // Lock scroll on mobile only (max-width: 768px)
+  useEffect(() => {
+    const lockScroll = () => {
+      if (window.innerWidth <= 768) {
+        document.documentElement.classList.add('homepage-mobile');
+      } else {
+        document.documentElement.classList.remove('homepage-mobile');
+      }
+    };
+
+    // Set initial state
+    lockScroll();
+
+    // Handle resize
+    window.addEventListener('resize', lockScroll);
+
+    return () => {
+      window.removeEventListener('resize', lockScroll);
+      // Cleanup on unmount
+      document.documentElement.classList.remove('homepage-mobile');
+    };
+  }, []);
 
   // Structured Data for SEO
   const organizationSchema = {
@@ -60,7 +73,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen">
+    <main className="h-screen overflow-hidden md:h-auto md:overflow-visible md:min-h-screen">
       {/* Structured Data for SEO */}
       <script
         type="application/ld+json"
@@ -73,8 +86,8 @@ export default function HomePage() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Featured Products Section */}
-      <section id="products" className="bg-white py-16 sm:py-20 lg:py-24">
+      {/* Featured Products Section - Desktop Only */}
+      <section id="products" className="hidden md:block bg-white py-16 sm:py-20 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16 animate-fade-in">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">Featured Products</h2>
@@ -108,8 +121,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="bg-black text-white py-16 sm:py-20 lg:py-24 relative overflow-hidden">
+      {/* CTA Section - Desktop Only */}
+      <section className="hidden md:block bg-black text-white py-16 sm:py-20 lg:py-24 relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
@@ -140,8 +153,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="bg-gray-50 py-16 sm:py-20 lg:py-24">
+      {/* Features Section - Desktop Only */}
+      <section className="hidden md:block bg-gray-50 py-16 sm:py-20 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">Why Choose Cobraa Wear?</h2>
