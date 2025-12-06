@@ -64,7 +64,7 @@ export default function CartItem({ item }) {
             {/* Remove Button */}
             <button
               onClick={() => removeFromCart(item.cartItemId)}
-              className="text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"
+              className="text-gray-400 md:hover:text-red-600 transition-colors flex-shrink-0"
               title="Remove item"
             >
               <svg
@@ -94,7 +94,7 @@ export default function CartItem({ item }) {
           <div className="flex items-center gap-2 border border-gray-300 rounded-lg">
             <button
               onClick={() => handleQuantityChange(item.quantity - 1)}
-              className="px-3 py-2 hover:bg-gray-100 transition-colors text-lg font-bold"
+              className="px-3 py-2 md:hover:bg-gray-100 transition-colors text-lg font-bold"
               disabled={item.quantity <= 1}
             >
               −
@@ -104,7 +104,7 @@ export default function CartItem({ item }) {
             </span>
             <button
               onClick={() => handleQuantityChange(item.quantity + 1)}
-              className="px-3 py-2 hover:bg-gray-100 transition-colors text-lg font-bold"
+              className="px-3 py-2 md:hover:bg-gray-100 transition-colors text-lg font-bold"
             >
               +
             </button>
@@ -130,7 +130,7 @@ export default function CartItem({ item }) {
               className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg border-2 font-medium text-sm sm:text-base transition-all ${
                 item.selectedSize === size
                   ? 'bg-black text-white border-black'
-                  : 'bg-white text-black border-gray-300 hover:border-black'
+                  : 'bg-white text-black border-gray-300 md:hover:border-black'
               }`}
             >
               {size}
@@ -152,7 +152,7 @@ export default function CartItem({ item }) {
               className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg border-2 font-medium text-sm sm:text-base transition-all flex items-center gap-2 ${
                 item.selectedColor === color.name
                   ? 'bg-black text-white border-black'
-                  : 'bg-white text-black border-gray-300 hover:border-black'
+                  : 'bg-white text-black border-gray-300 md:hover:border-black'
               }`}
             >
               <span
@@ -188,7 +188,7 @@ export default function CartItem({ item }) {
 
         {/* Total Price */}
         <p className="font-bold text-xl">
-          ${(item.price * item.quantity).toFixed(2)}
+          {item.price ? `${item.price * item.quantity} DH` : 'Price Coming Soon'}
         </p>
       </div>
     </div>

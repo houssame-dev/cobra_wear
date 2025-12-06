@@ -36,7 +36,7 @@ export async function sendRegularOrderEmail(orderData) {
       },
       0
     );
-    const shipping = 30; // Flat 30 DH shipping for all Morocco
+    const shipping = 20; // Flat 20 DH shipping for all Morocco
     const total = subtotal + shipping;
 
     const templateParams = {

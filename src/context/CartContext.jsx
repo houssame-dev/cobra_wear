@@ -115,37 +115,38 @@ export function CartProvider({ children }) {
   // Update item size or color
   const updateCartItem = (cartItemId, newSize, newColor) => {
     setCart((prevCart) => {
-      // Find the item to update
-      const itemToUpdate = prevCart.find((item) => item.cartItemId === cartItemId);
-      if (!itemToUpdate) return prevCart;
+      // Find the item to update and its index
+      const itemToUpdateIndex = prevCart.findIndex((item) => item.cartItemId === cartItemId);
+      if (itemToUpdateIndex === -1) return prevCart;
+      
+      const itemToUpdate = prevCart[itemToUpdateIndex];
 
-      // Remove the old item
-      const cartWithoutOldItem = prevCart.filter((item) => item.cartItemId !== cartItemId);
-
-      // Check if item with new size/color already exists
-      const existingItemIndex = cartWithoutOldItem.findIndex(
-        (item) =>
+      // Check if item with new size/color already exists (excluding the current item)
+      const existingItemIndex = prevCart.findIndex(
+        (item, index) =>
+          index !== itemToUpdateIndex &&
           item.id === itemToUpdate.id &&
           item.selectedSize === newSize &&
           item.selectedColor === newColor
       );
 
       if (existingItemIndex > -1) {
-        // Merge with existing item (add quantities)
-        const newCart = [...cartWithoutOldItem];
+        // Merge with existing item (add quantities) and remove the old item
+        const newCart = [...prevCart];
         newCart[existingItemIndex].quantity += itemToUpdate.quantity;
+        // Remove the old item
+        newCart.splice(itemToUpdateIndex, 1);
         return newCart;
       } else {
-        // Add updated item
-        return [
-          ...cartWithoutOldItem,
-          {
-            ...itemToUpdate,
-            selectedSize: newSize,
-            selectedColor: newColor,
-            cartItemId: `${itemToUpdate.id}-${newSize}-${newColor}`,
-          },
-        ];
+        // Update the item in place to maintain position
+        const newCart = [...prevCart];
+        newCart[itemToUpdateIndex] = {
+          ...itemToUpdate,
+          selectedSize: newSize,
+          selectedColor: newColor,
+          cartItemId: `${itemToUpdate.id}-${newSize}-${newColor}`,
+        };
+        return newCart;
       }
     });
   };
